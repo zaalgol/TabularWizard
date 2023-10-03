@@ -19,6 +19,25 @@ class DataPreprocessing:
         df_copy = df.copy()
         df_copy[column_name] = df_copy[column_name].map(mapping_dict)
         return df_copy
+    
+    # example of mapping_dict: {'high': 3, 'medium': 2, 'low': 1}
+    def reverse_map_order_column(self, df, column_name, mapping_dict):
+        # Inverting the mapping_dict
+        inverted_dict = {v: k for k, v in mapping_dict.items()}
+        df_copy = df.copy()
+        df_copy[column_name] = df_copy[column_name].map(inverted_dict)
+        return df_copy
+    
+    def one_hot_encode_columns(self, dataframe, column_name_array):
+        df = dataframe.copy()
+        for column_name in column_name_array:
+            df = self.one_hot_encode_column(df, column_name)
+        return df
+
+    def one_hot_encode_all_categorical_columns(self, df):
+        return pd.get_dummies(df,df.columns[df.dtypes == 'object'])
+
+
 
     def one_hot_encode_column(self, dataframe, column_name):
         """
@@ -42,3 +61,25 @@ class DataPreprocessing:
         encoded_df.drop(columns=[column_name], inplace=True)
         
         return encoded_df
+    
+    def get_numeric_columns(self, df):
+        return [f for f in df.columns if df.dtypes[f] != 'object']
+    
+    def get_not_numeric_columns(self, df):
+        return [f for f in df.columns if df.dtypes[f] == 'object']
+    
+    def fill_missing_numeric_cells(self, df, median_stratay=True):
+        new_df = df.copy()
+        if median_stratay:
+            new_df.fillna(df.median(numeric_only=True).round(1), inplace=True)
+        else:
+            new_df.fillna(df.mean(numeric_only=True).round(1), inplace=True)
+        return new_df
+    
+    def fill_missing_not_numeric_cells(self, df, median_stratay=True):
+        new_df = df.copy()
+        string_columns = new_df.select_dtypes(include=['object']).columns
+        new_df[string_columns] = new_df[string_columns].fillna(new_df[string_columns].mode().iloc[0])
+
+        return new_df
+    
