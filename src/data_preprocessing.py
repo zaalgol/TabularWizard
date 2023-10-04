@@ -34,6 +34,9 @@ class DataPreprocessing:
             df = self.one_hot_encode_column(df, column_name)
         return df
 
+    def get_all_categorical_columns_names(self, df):
+        return [f for f in df.columns if df.dtypes[f] == 'object']
+    
     def one_hot_encode_all_categorical_columns(self, df):
         return pd.get_dummies(df,df.columns[df.dtypes == 'object'])
 
