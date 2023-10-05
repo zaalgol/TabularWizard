@@ -1,72 +1,73 @@
 import pickle
+import os
 import pandas as pd
+from src.plot_data import plot_feature_importances, plot_model
 from src.regression.evaluate import Evaluate
 from src.regression.model.lightgbm_regerssor import LightGBMRegressor
 from src.data_preprocessing import DataPreprocessing
 import matplotlib.pyplot as plt
 from datetime import datetime
 
-
-SAVED_MODEL_PATH = 'results\\trained_models\\house_prices_finalized_lightgbm_model.sav'
+timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+SAVED_MODEL_FOLDER = os.path.join('results', 'trained_models', f" lgbm_regression_{timestamp}")
+os.makedirs(SAVED_MODEL_FOLDER)
+SAVED_MODEL_FILE = os.path.join(SAVED_MODEL_FOLDER, 'house_prices_finalized_lightgbm_model.sav')
+SAVED_MODEL_EVALUATION = os.path.join(SAVED_MODEL_FOLDER, 'house_prices_finalized_lightgbm_model_eval')
+# SAVED_MODEL_PATH = 'results\\trained_models\\house_prices_finalized_lightgbm_model.sav'
+# SAVED_MODEL_PATH = os.path.join('results', 'trained_models', 'house_prices_finalized_lightgbm_model.sav')
 train_data_path = 'datasets\house_prices_train.csv'
 
 def train_model():
     df = pd.read_csv(train_data_path)
     print(df)
     df = perprocess_data(df)
-    xgboost_classifier = LightGBMRegressor(train_df = df, prediction_column = 'SalePrice')
-    xgboost_classifier.tune_hyper_parameters_with_bayesian()
-    model = xgboost_classifier.train()
+    lightgbm_classifier = LightGBMRegressor(train_df = df, prediction_column = 'SalePrice')
+    lightgbm_classifier.tune_hyper_parameters_with_bayesian()
+    model = lightgbm_classifier.train()
 
     evaluate = Evaluate()
-
-    y_train_predict = evaluate.predict(model, xgboost_classifier.X_train)
-    print("Train evaluation:")
-    evaluate.evaluate_predictions(xgboost_classifier.y_train, y_train_predict)
-
-    y_test_predict = evaluate.predict(model, xgboost_classifier.X_test)
-    print("Test evaluation:")
-    evaluate.evaluate_predictions(xgboost_classifier.y_test, y_test_predict)
-    
-    pickle.dump(model, open(SAVED_MODEL_PATH, 'wb'))
+    evaluations = evaluate.evaluate_model(model, lightgbm_classifier.X_train, lightgbm_classifier.y_train,
+                             lightgbm_classifier.X_test, lightgbm_classifier.y_test)
+    with open(SAVED_MODEL_EVALUATION, 'w') as file:
+        file.write(evaluations)
+    pickle.dump(model, open(SAVED_MODEL_FILE, 'wb'))
 
 def use_traned_model():
+
+    print(os.environ['PATH'])
+    os.environ['PATH'] = r'C:\Program Files\Graphviz\bin' + ';' + os.environ['PATH']
+    print(os.environ['PATH'])
     df = pd.read_csv(train_data_path)
     data_preprocessing = DataPreprocessing()
     df = perprocess_data(df)
     X_data = data_preprocessing.exclude_columns(df, ['SalePrice'])
-    loaded_model = pickle.load(open(SAVED_MODEL_PATH, 'rb'))
+
+    loaded_model = pickle.load(open(SAVED_MODEL_FILE, 'rb'))
     print(f'hyper params are: {loaded_model.best_params_}' )
+
     evaluate = Evaluate()
     y_predict = evaluate.predict(loaded_model, X_data)
     evaluate.evaluate_predictions(df['SalePrice'], y_predict)
+
+    with open(SAVED_MODEL_EVALUATION, 'r') as file:
+       print(file.read())
+
+    plot_model(loaded_model)
+    plot_feature_importances(loaded_model)
+    t=0
+
+    
+
+    
 
 
 def perprocess_data(df):
     data_preprocessing = DataPreprocessing()
     df = data_preprocessing.exclude_columns(df, ['Id'])
-    # df = data_preprocessing.map_order_column(df, 'Utilities', {'AllPub': 4, 'NoSewr': 3,'NoSeWa': 2, 'ELO': 1})
-    # df = data_preprocessing.map_order_column(df, 'ExterQual', {'Ex': 5,'Gd': 4, 'TA': 3,'Fa': 2, 'Po': 1})
-    # df = data_preprocessing.map_order_column(df, 'ExterCond', {'Ex': 5,'Gd': 4, 'TA': 3,'Fa': 2, 'Po': 1})
-    # df = data_preprocessing.map_order_column(df, 'BsmtQual', {'Ex': 5,'Gd': 4, 'TA': 3,'Fa': 2, 'Po': 1, 'NA':0})
-    # df = data_preprocessing.map_order_column(df, 'BsmtCond', {'Ex': 5,'Gd': 4, 'TA': 3,'Fa': 2, 'Po': 1, 'NA':0})
-    # df = data_preprocessing.map_order_column(df, 'BsmtExposure', {'Gd': 4, 'TA': 3,'Fa': 2, 'Po': 1, 'NA':0})
-    # df = data_preprocessing.map_order_column(df, 'BsmtFinType1', {'GLQ': 6,'ALQ': 5,'BLQ': 4, 'Rec': 3,'LwQ': 2, 'Unf': 1, 'NA':0})
-    # df = data_preprocessing.map_order_column(df, 'BsmtFinType2', {'GLQ': 6,'ALQ': 5,'BLQ': 4, 'Rec': 3,'LwQ': 2, 'Unf': 1, 'NA':0})
-    # df = data_preprocessing.map_order_column(df, 'HeatingQC', {'Ex': 5,'Gd': 4, 'TA': 3,'Fa': 2, 'Po': 1})
-    # df = data_preprocessing.map_order_column(df, 'KitchenQual', {'Ex': 5,'Gd': 4, 'TA': 3,'Fa': 2, 'Po': 1})
-    # df = data_preprocessing.map_order_column(df, 'FireplaceQu', {'Ex': 5,'Gd': 4, 'TA': 3,'Fa': 2, 'Po': 1, 'NA':0})
-    # df = data_preprocessing.map_order_column(df, 'GarageQual', {'Ex': 5,'Gd': 4, 'TA': 3,'Fa': 2, 'Po': 1, 'NA':0})
-    # df = data_preprocessing.map_order_column(df, 'GarageCond', {'Ex': 5,'Gd': 4, 'TA': 3,'Fa': 2, 'Po': 1, 'NA':0})
-    # df = data_preprocessing.map_order_column(df, 'PoolQC', {'Ex': 4,'Gd': 3, 'TA': 2,'Fa': 1, 'NA':0})
-    # df = data_preprocessing.one_hot_encode_all_categorical_columns(df)
     cat_features  =  data_preprocessing.get_all_categorical_columns_names(df)
     for feature in cat_features:
         df[feature] = df[feature].astype('category')
     return df
-    # quantitative = [f for f in X_data.columns if X_data.dtypes[f] != 'object']
-    # qualitative = [f for f in df.columns if df.dtypes[f] == 'object']
-    # df = data_preprocessing.one_hot_encode_columns(df, qualitative)
 
 
 if __name__ == '__main__':

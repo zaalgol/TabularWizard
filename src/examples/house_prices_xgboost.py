@@ -61,10 +61,6 @@ def perprocess_data(df):
     df = data_preprocessing.map_order_column(df, 'PoolQC', {'Ex': 4,'Gd': 3, 'TA': 2,'Fa': 1, 'NA':0})
     df = data_preprocessing.one_hot_encode_all_categorical_columns(df)
     return df
-    # quantitative = [f for f in X_data.columns if X_data.dtypes[f] != 'object']
-    # qualitative = [f for f in df.columns if df.dtypes[f] == 'object']
-    # df = data_preprocessing.one_hot_encode_columns(df, qualitative)
-
 
 if __name__ == '__main__':
 
