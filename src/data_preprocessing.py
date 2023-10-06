@@ -1,4 +1,5 @@
 import pandas as pd
+from sklearn.preprocessing import MinMaxScaler
 
 class DataPreprocessing:
     def exclude_columns(self, df, columns_to_exclude):
@@ -33,6 +34,7 @@ class DataPreprocessing:
         for column_name in column_name_array:
             df = self.one_hot_encode_column(df, column_name)
         return df
+    
 
     def get_all_categorical_columns_names(self, df):
         return [f for f in df.columns if df.dtypes[f] == 'object']
@@ -68,9 +70,6 @@ class DataPreprocessing:
     def get_numeric_columns(self, df):
         return [f for f in df.columns if df.dtypes[f] != 'object']
     
-    def get_not_numeric_columns(self, df):
-        return [f for f in df.columns if df.dtypes[f] == 'object']
-    
     def fill_missing_numeric_cells(self, df, median_stratay=True):
         new_df = df.copy()
         if median_stratay:
@@ -86,3 +85,7 @@ class DataPreprocessing:
 
         return new_df
     
+    def scale_values_netween_0_to_1(self, df, columns):
+        scaler = MinMaxScaler()
+        df = pd.DataFrame(scaler.fit_transform(df), columns=columns)
+        return df

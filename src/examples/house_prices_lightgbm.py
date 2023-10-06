@@ -56,10 +56,6 @@ def use_traned_model():
     plot_feature_importances(loaded_model)
     t=0
 
-    
-
-    
-
 
 def perprocess_data(df):
     data_preprocessing = DataPreprocessing()

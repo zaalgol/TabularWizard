@@ -9,8 +9,10 @@ from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.neural_network import MLPRegressor
 
-def automatic_nn(dataframe, target_column):
-    # Separate features and target variable
+from src.data_preprocessing import DataPreprocessing
+
+#### see https://chat.openai.com/c/6de8cee9-dbd1-4f79-a0b1-57d7303e78d5 for order columns!!
+def automatic_nn(dataframe, target_column, scale=False):
     X = dataframe.drop(columns=[target_column])
     y = dataframe[target_column]
 
@@ -19,10 +21,12 @@ def automatic_nn(dataframe, target_column):
     cat_features = X.select_dtypes(include=['object']).columns.tolist()
 
     # Create transformers
-    num_transformer = Pipeline(steps=[
-        ('num_imputer', SimpleImputer(strategy='mean')),  # Impute NaNs with mean value
-        ('scaler', StandardScaler())
-    ])
+    num_transformer_steps = [
+        ('num_imputer', SimpleImputer(strategy='mean'))
+    ]
+    if scale:
+        num_transformer_steps.append(('scaler', StandardScaler()))
+    num_transformer = Pipeline(steps=num_transformer_steps)
     
     cat_transformer = Pipeline(steps=[
         ('cat_imputer', SimpleImputer(strategy='most_frequent')),  # Impute NaNs with most frequent category
@@ -54,9 +58,6 @@ def automatic_nn(dataframe, target_column):
             random_state=42,
             solver='adam',  # or 'lbfgs',
             alpha=0.5  # L2 regularization term; adjust as needed
-            # early_stopping=True,
-            # validation_fraction=0.1,  # Fraction of training data to set aside as validation set for early stopping
-            # n_iter_no_change=10
         ))
     ])
 

@@ -17,7 +17,8 @@ def train_model():
     print(df)
     data_preprocessing = DataPreprocessing()
     df = data_preprocessing.exclude_columns(df, ['Id'])
-    model = automatic_nn(df, 'SalePrice')
+    # df = perprocess_data(df)
+    model = automatic_nn(df, 'SalePrice', scale=True)
 
     # evaluate = Evaluate()
 
@@ -45,7 +46,7 @@ def train_model():
 
 def perprocess_data(df):
     data_preprocessing = DataPreprocessing()
-    df = data_preprocessing.exclude_columns(df, ['Id'])
+    # df = data_preprocessing.exclude_columns(df, ['Id'])
     # df = data_preprocessing.map_order_column(df, 'Utilities', {'AllPub': 4, 'NoSewr': 3,'NoSeWa': 2, 'ELO': 1})
     # df = data_preprocessing.map_order_column(df, 'ExterQual', {'Ex': 5,'Gd': 4, 'TA': 3,'Fa': 2, 'Po': 1})
     # df = data_preprocessing.map_order_column(df, 'ExterCond', {'Ex': 5,'Gd': 4, 'TA': 3,'Fa': 2, 'Po': 1})
@@ -61,13 +62,28 @@ def perprocess_data(df):
     # df = data_preprocessing.map_order_column(df, 'GarageCond', {'Ex': 5,'Gd': 4, 'TA': 3,'Fa': 2, 'Po': 1, 'NA':0})
     # df = data_preprocessing.map_order_column(df, 'PoolQC', {'Ex': 4,'Gd': 3, 'TA': 2,'Fa': 1, 'NA':0})
     # df = data_preprocessing.one_hot_encode_all_categorical_columns(df)
-    cat_features  =  data_preprocessing.get_all_categorical_columns_names(df)
-    for feature in cat_features:
-        df[feature] = df[feature].astype('category')
-    return df
+
+
+
+    #### with transform for num.categorical astype('category')
+    # cat_features  =  data_preprocessing.get_all_categorical_columns_names(df)
+    # for feature in cat_features:
+    #     df[feature] = df[feature].astype('category')
+    # num_features = data_preprocessing.get_numeric_columns(df)
+    # df =data_preprocessing.scale_values_netween_0_to_1(df, num_features)
+
+    df = data_preprocessing.fill_missing_not_numeric_cells(df)
+    df = data_preprocessing.one_hot_encode_all_categorical_columns(df)
+    df = data_preprocessing.fill_missing_numeric_cells(df)
+    # print(df)
+    # df = data_preprocessing.scale_values_netween_0_to_1(df, df.columns)
+    print(df)
+
     # quantitative = [f for f in X_data.columns if X_data.dtypes[f] != 'object']
     # qualitative = [f for f in df.columns if df.dtypes[f] == 'object']
     # df = data_preprocessing.one_hot_encode_columns(df, qualitative)
+
+    return df
 
 
 if __name__ == '__main__':
