@@ -7,7 +7,11 @@ import matplotlib.pyplot as plt
 from datetime import datetime
 
 
-SAVED_MODEL_PATH = 'results\\trained_models\\house_prices_finalized_model.sav'
+timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+SAVED_MODEL_FOLDER = os.path.join('results', 'trained_models', f" xgboost_regression_{timestamp}")
+os.makedirs(SAVED_MODEL_FOLDER)
+SAVED_MODEL_FILE = os.path.join(SAVED_MODEL_FOLDER, 'house_prices_finalized_xgboost_model.sav')
+SAVED_MODEL_EVALUATION = os.path.join(SAVED_MODEL_FOLDER, 'house_prices_finalized_xgboost__model_eval')
 train_data_path = 'datasets\house_prices_train.csv'
 
 def train_model():
@@ -28,14 +32,14 @@ def train_model():
     print("Test evaluation:")
     evaluate.evaluate_predictions(xgboost_classifier.y_test, y_test_predict)
     
-    pickle.dump(model, open(SAVED_MODEL_PATH, 'wb'))
+    pickle.dump(model, open(SAVED_MODEL_FILE, 'wb'))
 
 def use_traned_model():
     df = pd.read_csv(train_data_path)
     data_preprocessing = DataPreprocessing()
     df = perprocess_data(df)
     X_data = data_preprocessing.exclude_columns(df, ['SalePrice'])
-    loaded_model = pickle.load(open(SAVED_MODEL_PATH, 'rb'))
+    loaded_model = pickle.load(open(SAVED_MODEL_FILE, 'rb'))
     print(f'hyper params are: {loaded_model.best_params_}' )
     evaluate = Evaluate()
     y_predict = evaluate.predict(loaded_model, X_data)

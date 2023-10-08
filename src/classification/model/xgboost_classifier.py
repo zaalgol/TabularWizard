@@ -57,8 +57,10 @@ class XgboostClassifier:
                   'colsample_bytree': np.arange (0.4, 1.0, 0.1),
                   'colsample_bylevel': np.arange (0.4, 1.0, 0.1),
                   'min_child_weight': (0, 30),
-                  'gamma': (0, 20),
-                  'n_estimators': (50, 1000)}
+                  'gamma': [0, 1, 5],
+                  'n_estimators': (50, 1000),
+                  'reg_alpha': [0, 0.1, 0.2, 0.3, 1],
+                  'reg_lambda': [1, 1.5, 1.6, 1.7, 1.8, 2]}
         xgbr = xgb.XGBClassifier (enable_categorical=True, tree_method='hist')
         self.search = BayesSearchCV (estimator=xgbr,
                                      search_spaces=params,

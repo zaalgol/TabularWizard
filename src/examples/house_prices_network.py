@@ -1,43 +1,48 @@
+import os
 import pickle
 import pandas as pd
-from src.regression.evaluate import Evaluate
+from src.classification.evaluate import Evaluate
 from src.regression.model.lightgbm_regerssor import LightGBMRegressor
 from src.data_preprocessing import DataPreprocessing
 import matplotlib.pyplot as plt
 from datetime import datetime
 
-from src.regression.model.mlrpregressor import automatic_nn
+from src.regression.model.mlrpregressor import Mlrpegressor #, automatic_nn
+timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+SAVED_MODEL_FOLDER = os.path.join('results', 'trained_models', f" mlrpregressor_regression_{timestamp}")
+SAVED_MODEL_FILE = os.path.join(SAVED_MODEL_FOLDER, 'house_prices_finalized_mlrpregressor_model.sav')
+SAVED_MODEL_EVALUATION = os.path.join(SAVED_MODEL_FOLDER, 'house_prices_finalized_lightgbm_model_eval')
 
-
-SAVED_MODEL_PATH = 'results\\trained_models\\house_prices_finalized_mlrpregressor_model.sav'
+# SAVED_MODEL_PATH = 'results\\trained_models\\house_prices_finalized_mlrpregressor_model.sav'
 train_data_path = 'datasets\house_prices_train.csv'
 
 def train_model():
     df = pd.read_csv(train_data_path)
     print(df)
     data_preprocessing = DataPreprocessing()
-    df = data_preprocessing.exclude_columns(df, ['Id'])
+    # df = data_preprocessing.exclude_columns(df, ['Id'])
     # df = perprocess_data(df)
-    model = automatic_nn(df, 'SalePrice', scale=True)
+    order_columns_and_values = {'GarageQual': ['NA', 'Po', 'Fa', 'TA', 'Gd', 'Ex'],  'Utilities': ['ELO', 'NoSeWa' , 'NoSewr' , 'AllPub']}
+    mlrpegressor = Mlrpegressor(df, 'SalePrice', scale=True,
+                                  order_columns_and_values=order_columns_and_values)#, columns_to_remove = ['Id'])
+    model = mlrpegressor.train_model()    # model = automatic_nn(df, 'SalePrice', scale=True,  order_columns_and_values=order_columns_and_values, columns_to_remove = 'Id')
 
-    # evaluate = Evaluate()
-
-    # y_train_predict = evaluate.predict(model, xgboost_classifier.X_train)
-    # print("Train evaluation:")
-    # evaluate.evaluate_predictions(xgboost_classifier.y_train, y_train_predict)
-
-    # y_test_predict = evaluate.predict(model, xgboost_classifier.X_test)
-    # print("Test evaluation:")
-    # evaluate.evaluate_predictions(xgboost_classifier.y_test, y_test_predict)
+    evaluate = Evaluate()
+    evaluations = evaluate.evaluate_model(model, mlrpegressor.X_train, mlrpegressor.y_train,
+                             mlrpegressor.X_test, mlrpegressor.y_test)
+    os.makedirs(SAVED_MODEL_FOLDER)
+    with open(SAVED_MODEL_EVALUATION, 'w') as file:
+        file.write(evaluations)
+   
     
-    pickle.dump(model, open(SAVED_MODEL_PATH, 'wb'))
+    pickle.dump(model, open(SAVED_MODEL_FILE, 'wb'))
 
 # def use_traned_model():
 #     df = pd.read_csv(train_data_path)
 #     data_preprocessing = DataPreprocessing()
 #     df = perprocess_data(df)
 #     X_data = data_preprocessing.exclude_columns(df, ['SalePrice'])
-#     loaded_model = pickle.load(open(SAVED_MODEL_PATH, 'rb'))
+#     loaded_model = pickle.load(open(SAVED_MODEL_FILE, 'rb'))
 #     print(f'hyper params are: {loaded_model.best_params_}' )
 #     evaluate = Evaluate()
 #     y_predict = evaluate.predict(loaded_model, X_data)
