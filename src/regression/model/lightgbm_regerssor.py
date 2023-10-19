@@ -44,7 +44,7 @@ class LightGBMRegressor:
         self.X_train = self.X_train.drop([prediction_column], axis=1)
         self.X_test = self.X_test.drop([prediction_column], axis=1)
 
-    def tune_hyper_parameters_with_bayesian(self, params_constrained=None, hyperparams=None,
+    def tune_hyper_parameters(self, params_constrained=None, hyperparams=None,
                                             early_stopping_rounds=10, eval_metric=EVAL_METRIC,
                                             scoring='neg_mean_squared_error', n_iter=25, verbose=0):
         if hyperparams is None:

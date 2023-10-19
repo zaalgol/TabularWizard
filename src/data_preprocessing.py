@@ -89,3 +89,11 @@ class DataPreprocessing:
         scaler = MinMaxScaler()
         df = pd.DataFrame(scaler.fit_transform(df), columns=columns)
         return df
+    
+    def describe_datafranme(self, df):
+        print(df.describe().T)
+        return (df.describe().T)
+    
+    def get_missing_values_per_coloun(self, df):
+        return df.isnull().sum()
+

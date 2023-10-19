@@ -1,12 +1,16 @@
-
-
+import os
+from datetime import datetime
 import pickle
 import pandas as pd
 from src.classification.evaluate import Evaluate
 from src.classification.model.xgboost_classifier import XgboostClassifier
 from src.data_preprocessing import DataPreprocessing
 
-SAVED_MODEL_PATH = 'results\\trained_models\\iris_finalized_model.sav'
+timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+# SAVED_MODEL_PATH = 'results\\trained_models\\iris_finalized_model.sav'
+SAVED_MODEL_FOLDER = os.path.join('results', 'trained_models', 'iris_regression', f"xgboost{timestamp}")
+os.makedirs(SAVED_MODEL_FOLDER)
+SAVED_MODEL_FILE = os.path.join(SAVED_MODEL_FOLDER, 'iris_finalized_exboost_model.sav')
 iris_path = 'datasets\IRIS.csv'
 
 
@@ -17,10 +21,10 @@ def train_model():
     df = data_preprocessing.map_order_column(df, 'species', {'Iris-setosa':0, 'Iris-versicolor':1, 'Iris-virginica':2})
     print(df)
     xgboost_classifier = XgboostClassifier(train_df = df, prediction_column = 'species')
-    xgboost_classifier.tune_hyper_parameters_with_bayesian()
+    xgboost_classifier.tune_hyper_parameters()
     model = xgboost_classifier.train()
     
-    pickle.dump(model, open(SAVED_MODEL_PATH, 'wb'))
+    pickle.dump(model, open(SAVED_MODEL_FILE, 'wb'))
 
 def use_traned_model():
 
@@ -28,7 +32,7 @@ def use_traned_model():
     data_preprocessing = DataPreprocessing()
     df = data_preprocessing.map_order_column(df, 'species', {'Iris-setosa':0, 'Iris-versicolor':1, 'Iris-virginica':2})
     X_data = data_preprocessing.exclude_columns(df, ['species'])
-    loaded_model = pickle.load(open(SAVED_MODEL_PATH, 'rb'))
+    loaded_model = pickle.load(open(SAVED_MODEL_FILE, 'rb'))
     evaluate = Evaluate()
     y_predict = evaluate.predict(loaded_model, X_data)
     evaluate.evaluate_predictions(df['species'], y_predict)

@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 from datetime import datetime
 
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-SAVED_MODEL_FOLDER = os.path.join('results', 'trained_models', f" lgbm_regression_{timestamp}")
+SAVED_MODEL_FOLDER = os.path.join('results', 'trained_models', 'regression', f" lgbm_{timestamp}")
 os.makedirs(SAVED_MODEL_FOLDER)
 SAVED_MODEL_FILE = os.path.join(SAVED_MODEL_FOLDER, 'house_prices_finalized_lightgbm_model.sav')
 SAVED_MODEL_EVALUATION = os.path.join(SAVED_MODEL_FOLDER, 'house_prices_finalized_lightgbm_model_eval')
@@ -22,7 +22,7 @@ def train_model():
     print(df)
     df = perprocess_data(df)
     lightgbm_classifier = LightGBMRegressor(train_df = df, prediction_column = 'SalePrice')
-    lightgbm_classifier.tune_hyper_parameters_with_bayesian()
+    lightgbm_classifier.tune_hyper_parameters()
     model = lightgbm_classifier.train()
 
     evaluate = Evaluate()

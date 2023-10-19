@@ -1,3 +1,4 @@
+import os
 import pickle
 import pandas as pd
 from src.regression.evaluate import Evaluate
@@ -8,7 +9,7 @@ from datetime import datetime
 
 
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-SAVED_MODEL_FOLDER = os.path.join('results', 'trained_models', f" xgboost_regression_{timestamp}")
+SAVED_MODEL_FOLDER = os.path.join('results', 'trained_models', 'regression', f" xgboost_{timestamp}")
 os.makedirs(SAVED_MODEL_FOLDER)
 SAVED_MODEL_FILE = os.path.join(SAVED_MODEL_FOLDER, 'house_prices_finalized_xgboost_model.sav')
 SAVED_MODEL_EVALUATION = os.path.join(SAVED_MODEL_FOLDER, 'house_prices_finalized_xgboost__model_eval')
@@ -19,7 +20,7 @@ def train_model():
     print(df)
     df = perprocess_data(df)
     xgboost_classifier = XgboostRegressor(train_df = df, prediction_column = 'SalePrice')
-    xgboost_classifier.tune_hyper_parameters_with_bayesian()
+    xgboost_classifier.tune_hyper_parameters()
     model = xgboost_classifier.train()
 
     evaluate = Evaluate()

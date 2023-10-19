@@ -9,7 +9,8 @@ from datetime import datetime
 
 from src.regression.model.mlrpregressor import Mlrpegressor #, automatic_nn
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-SAVED_MODEL_FOLDER = os.path.join('results', 'trained_models', f" mlrpregressor_regression_{timestamp}")
+SAVED_MODEL_FOLDER = os.path.join('results', 'trained_models', 'regression', f"mlrpregressor_regression_{timestamp}")
+os.makedirs(SAVED_MODEL_FOLDER)
 SAVED_MODEL_FILE = os.path.join(SAVED_MODEL_FOLDER, 'house_prices_finalized_mlrpregressor_model.sav')
 SAVED_MODEL_EVALUATION = os.path.join(SAVED_MODEL_FOLDER, 'house_prices_finalized_lightgbm_model_eval')
 

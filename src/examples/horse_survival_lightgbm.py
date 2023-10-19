@@ -6,11 +6,11 @@ import pickle
 import pandas as pd
 from sklearn.metrics import confusion_matrix
 from src.classification.evaluate import Evaluate
-from src.classification.model.xgboost_classifier import XgboostClassifier
+from src.classification.model.lightgbm_classifier import LightgbmClassifier
 from src.data_preprocessing import DataPreprocessing
 
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-SAVED_MODEL_FOLDER = os.path.join('results', 'trained_models', f" house_prices_xgboosr_classification_{timestamp}")
+SAVED_MODEL_FOLDER = os.path.join('results', 'trained_models', 'classification', f"house_prices_xgboos_{timestamp}")
 os.makedirs(SAVED_MODEL_FOLDER)
 SAVED_MODEL_FILE = os.path.join(SAVED_MODEL_FOLDER, 'house_prices_finalized_xgboosr_classification_model.sav')
 SAVED_MODEL_EVALUATION = os.path.join(SAVED_MODEL_FOLDER, 'house_prices_finalized_xgboosr_classification_mode_eval')
@@ -24,17 +24,17 @@ def train_model():
     data_preprocessing = DataPreprocessing()
     df = perprocess_data(df)
 
-    xgboost_classifier = XgboostClassifier(train_df = df, prediction_column = 'outcome')
-    xgboost_classifier.tune_hyper_parameters_with_bayesian()
-    model = xgboost_classifier.train()
+    lgbm_classifier = LightgbmClassifier(train_df = df, prediction_column = 'outcome', scorring='accuracy')
+    lgbm_classifier.tune_hyper_parameters()
+    model = lgbm_classifier.train()
 
     evaluate = Evaluate()
     print("Test eval:")
-    y_predict = evaluate.predict(model, xgboost_classifier.X_test)
-    evaluate.evaluate_predictions (xgboost_classifier.y_test, y_predict)
+    y_predict = evaluate.predict(model, lgbm_classifier.X_test)
+    evaluate.evaluate_predictions (lgbm_classifier.y_test, y_predict)
     print("Train eval:")
-    y_predict = evaluate.predict(model, xgboost_classifier.X_train)
-    evaluate.evaluate_predictions (xgboost_classifier.y_train, y_predict)
+    y_predict = evaluate.predict(model, lgbm_classifier.X_train)
+    evaluate.evaluate_predictions (lgbm_classifier.y_train, y_predict)
     pickle.dump(model, open(SAVED_MODEL_FILE, 'wb'))
 
 def use_traned_model():
@@ -57,7 +57,10 @@ def perprocess_data(df):
     df["deviation_from_normal_temp"] = df["rectal_temp"].apply(lambda x: abs(x - 37.8))
     df = data_preprocessing.map_order_column(df, 'outcome', {'died':0, 'euthanized':1, 'lived':2})
     df = data_preprocessing.map_order_column(df, 'temp_of_extremities', {'cool':0, 'normal':1, 'warm':2})
-    df = data_preprocessing.one_hot_encode_all_categorical_columns(df)
+    # df = data_preprocessing.one_hot_encode_all_categorical_columns(df)
+    cat_features  =  data_preprocessing.get_all_categorical_columns_names(df)
+    for feature in cat_features:
+        df[feature] = df[feature].astype('category')
 
     return df
 
