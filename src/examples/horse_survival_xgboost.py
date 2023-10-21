@@ -21,21 +21,20 @@ dataset_Path = 'datasets\horse_survival_train.csv'
 def train_model():
     
     df = pd.read_csv(dataset_Path)
-    data_preprocessing = DataPreprocessing()
     df = perprocess_data(df)
 
     xgboost_classifier = XgboostClassifier(train_df = df, prediction_column = 'outcome')
     xgboost_classifier.tune_hyper_parameters()
     model = xgboost_classifier.train()
+    pickle.dump(model, open(SAVED_MODEL_FILE, 'wb'))
 
     evaluate = Evaluate()
-    print("Test eval:")
-    y_predict = evaluate.predict(model, xgboost_classifier.X_test)
-    evaluate.evaluate_predictions (xgboost_classifier.y_test, y_predict)
-    print("Train eval:")
-    y_predict = evaluate.predict(model, xgboost_classifier.X_train)
-    evaluate.evaluate_predictions (xgboost_classifier.y_train, y_predict)
-    pickle.dump(model, open(SAVED_MODEL_FILE, 'wb'))
+    evaluations = evaluate.evaluate_train_and_test(model, xgboost_classifier)
+    
+    print(f"model evaluations: {evaluations}")
+    with open(SAVED_MODEL_EVALUATION, 'w') as file:
+        file.write(evaluations)
+
 
 def use_traned_model():
 
@@ -46,7 +45,7 @@ def use_traned_model():
     loaded_model = pickle.load(open(SAVED_MODEL_FILE, 'rb'))
     evaluate = Evaluate()
     y_predict = evaluate.predict(loaded_model, X_data)
-    evaluate.evaluate_predictions(df['outcome'], y_predict)
+    print(evaluate.evaluate_classification(df['outcome'], y_predict))
 
 def perprocess_data(df):
     data_preprocessing = DataPreprocessing()

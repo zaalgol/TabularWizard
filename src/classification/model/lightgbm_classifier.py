@@ -12,28 +12,21 @@ DEFAULT_PARAMS = {
             'subsample_for_bin': [20000,50000,100000,120000,150000],
             'min_child_samples': [20,50,100,200,500],
             'colsample_bytree': [0.6,0.8,1],
-            # "max_depth": [5,10,50,100],
             "max_depth": (5,100, 'uniform'),
-            # 'lambda_l1': [0, 0.1, 0.5, 1],
-            # 'lambda_l2': [0, 0.1, 0.5, 1]
             'lambda_l1': (0.7, 1),
             'lambda_l2': (0.7, 1)
         }
 
 class LightgbmClassifier:
     def __init__(self, train_df, prediction_column, split_column=None, test_size = 0.3):
-        self.X_true = None
-        self.train_predictions = None
-        self.test_predictions = None
         self.search = None
-        self.test_size = test_size
 
         if split_column is None:
             self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(train_df,
                                                                                      train_df[prediction_column],
-                                                                                     test_size=self.test_size)
+                                                                                     test_size=test_size, random_state=42)
         else:
-            splitter = GroupShuffleSplit(test_size=self.test_size, n_splits=2, random_state=7)
+            splitter = GroupShuffleSplit(test_size=test_size, n_splits=2, random_state=7)
             split = splitter.split(train_df, groups=train_df[split_column])
             train_inds, test_inds = next(split)
 
@@ -60,12 +53,12 @@ class LightgbmClassifier:
         print("Best parameters:", self.search.best_params_)
         print("Best accuracy: ", self.search.best_score_)
 
-        y_train_pred = result.predict(self.X_train) 
-        score = round(accuracy_score(self.y_train, y_train_pred), 3) 
-        print("train acuracy", score)
+        # y_train_pred = result.predict(self.X_train) 
+        # train_score = round(accuracy_score(self.y_train, y_train_pred), 3) 
+        # print("train acuracy", train_score)
 
-        y_test_pred = result.predict(self.X_test)
-        score = round(accuracy_score(self.y_test, y_test_pred), 3)
-        print("test acuracy", score)
+        # y_test_pred = result.predict(self.X_test)
+        # test_score = round(accuracy_score(self.y_test, y_test_pred), 3)
+        # print("test acuracy", test_score)
 
-        return result, self.search.best_params_, self.search.best_score_, score
+        return result

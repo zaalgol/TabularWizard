@@ -35,7 +35,7 @@ def use_traned_model():
     loaded_model = pickle.load(open(SAVED_MODEL_FILE, 'rb'))
     evaluate = Evaluate()
     y_predict = evaluate.predict(loaded_model, X_data)
-    evaluate.evaluate_predictions(df['species'], y_predict)
+    evaluate.evaluate_classification(df['species'], y_predict)
 
 
 if __name__ == '__main__':

@@ -4,7 +4,6 @@ from datetime import datetime
 import os
 import pickle
 import pandas as pd
-from sklearn.metrics import confusion_matrix
 from src.classification.evaluate import Evaluate
 from src.classification.model.lightgbm_classifier import LightgbmClassifier
 from src.data_preprocessing import DataPreprocessing
@@ -12,8 +11,8 @@ from src.data_preprocessing import DataPreprocessing
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 SAVED_MODEL_FOLDER = os.path.join('results', 'trained_models', 'classification', f"house_prices_xgboos_{timestamp}")
 os.makedirs(SAVED_MODEL_FOLDER)
-SAVED_MODEL_FILE = os.path.join(SAVED_MODEL_FOLDER, 'house_prices_finalized_xgboosr_classification_model.sav')
-SAVED_MODEL_EVALUATION = os.path.join(SAVED_MODEL_FOLDER, 'house_prices_finalized_xgboosr_classification_mode_eval')
+SAVED_MODEL_FILE = os.path.join(SAVED_MODEL_FOLDER, 'house_prices_finalized_lgbm_classification_model.sav')
+SAVED_MODEL_EVALUATION = os.path.join(SAVED_MODEL_FOLDER, 'house_prices_finalized_lgbm_classification_mode_eval')
 
 dataset_Path = 'datasets\horse_survival_train.csv'
 
@@ -21,24 +20,21 @@ dataset_Path = 'datasets\horse_survival_train.csv'
 def train_model():
     
     df = pd.read_csv(dataset_Path)
-    data_preprocessing = DataPreprocessing()
     df = perprocess_data(df)
 
-    lgbm_classifier = LightgbmClassifier(train_df = df, prediction_column = 'outcome', scorring='accuracy')
-    lgbm_classifier.tune_hyper_parameters()
+    lgbm_classifier = LightgbmClassifier(train_df = df, prediction_column = 'outcome')
+    lgbm_classifier.tune_hyper_parameters(scoring='accuracy')
     model = lgbm_classifier.train()
-
-    evaluate = Evaluate()
-    print("Test eval:")
-    y_predict = evaluate.predict(model, lgbm_classifier.X_test)
-    evaluate.evaluate_predictions (lgbm_classifier.y_test, y_predict)
-    print("Train eval:")
-    y_predict = evaluate.predict(model, lgbm_classifier.X_train)
-    evaluate.evaluate_predictions (lgbm_classifier.y_train, y_predict)
     pickle.dump(model, open(SAVED_MODEL_FILE, 'wb'))
 
-def use_traned_model():
+    evaluate = Evaluate()
+    evaluations = evaluate.evaluate_train_and_test(model, lgbm_classifier)
+    
+    print(f"model evaluations: {evaluations}")
+    with open(SAVED_MODEL_EVALUATION, 'w') as file:
+        file.write(evaluations)
 
+def use_traned_model():
     df = pd.read_csv(dataset_Path)
     data_preprocessing = DataPreprocessing()
     df = perprocess_data(df)
@@ -46,7 +42,7 @@ def use_traned_model():
     loaded_model = pickle.load(open(SAVED_MODEL_FILE, 'rb'))
     evaluate = Evaluate()
     y_predict = evaluate.predict(loaded_model, X_data)
-    evaluate.evaluate_predictions(df['outcome'], y_predict)
+    print(evaluate.evaluate_classification(df['outcome'], y_predict))
 
 def perprocess_data(df):
     data_preprocessing = DataPreprocessing()
@@ -66,7 +62,7 @@ def perprocess_data(df):
 
 if __name__ == '__main__':
     train_model()
-    # use_traned_model()
+    use_traned_model()
 
 
 

@@ -22,3 +22,9 @@ class Visualize:
             height = p.get_height()
             graph.text(p.get_x()+p.get_width()/2., height + 0.1,height ,ha="center")
         plt.show()
+
+
+
+    # visualize = Visualize()
+    # visualize.show_distrebution_of_categatial_column_valuse(train_data, 'color')
+    # visualize.show_distrebution_of_categatial_column_valuse(test_data, 'color')
