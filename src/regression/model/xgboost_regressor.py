@@ -9,8 +9,8 @@ import matplotlib.pyplot as plt
 from xgboost import plot_importance
 from sklearn.model_selection import KFold
 
-EVAL_METRIC = 'rmse'
-TEST_SIZE = 0.3
+from src.base_model import BaseModel
+
 DEFAULT_HYPER_PARAMETERS = {
             'max_depth': (3, 10, 1),
             'learning_rate': (0.01, 0.3, "log-uniform"),
@@ -24,32 +24,12 @@ DEFAULT_HYPER_PARAMETERS = {
             'min_child_weight': (1, 10)
         }
 
-class XgboostRegressor:
-    def __init__ (self, train_df,
-                prediction_column,
-                test_df=None):
-        self.X_true = None
-        self.train_predictions = None
-        self.test_predictions = None
-        self.search = None,
-        self.hyperparams = None,
-
-        if test_df is None:
-            self.X_train, self.X_test, self.y_train, self.y_test = train_test_split (train_df,
-                                                                                    train_df[prediction_column],
-                                                                                    test_size=TEST_SIZE)
-            
-        else:
-            self.X_train = train_df 
-            self.y_train = train_df[prediction_column]
-            self.y_test = test_df
-            self.y_test = test_df [prediction_column]
-
-        self.X_train = self.X_train.drop ([prediction_column], axis=1)
-        self.X_test = self.X_test.drop ([prediction_column], axis=1)
+class XgboostRegressor(BaseModel):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
     def tune_hyper_parameters(self, params_constrained=None, hyperparams=None,
-                                             tree_method = "hist",device = None,  early_stopping_rounds=10, eval_metric=EVAL_METRIC,
+                                             tree_method = "hist",device = None,  early_stopping_rounds=10, eval_metric='rmse',
                                              scoring='neg_mean_squared_error', n_iter = 25, verbose = 0):
         if hyperparams is None:
             self.hyperparams = DEFAULT_HYPER_PARAMETERS

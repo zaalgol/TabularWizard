@@ -72,8 +72,6 @@ class Mlrpegressor:
             ('onehot', OneHotEncoder(handle_unknown='ignore'))
         ]
         
-
-
         if self.scale:
             num_transformer_steps.append(('scaler', StandardScaler()))
             # cat_transformer_onehot_steps.append(('scaler', StandardScaler()))

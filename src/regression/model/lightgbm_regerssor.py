@@ -6,6 +6,8 @@ from skopt import BayesSearchCV
 import matplotlib.pyplot as plt
 from sklearn.model_selection import KFold
 
+from src.base_model import BaseModel
+
 EVAL_METRIC = 'rmse'
 TEST_SIZE = 0.3
 DEFAULT_HYPER_PARAMETERS = {
@@ -23,27 +25,10 @@ DEFAULT_HYPER_PARAMETERS = {
 }
 
 
-class LightGBMRegressor:
-    def __init__(self, train_df, prediction_column, test_df=None):
-        self.X_true = None
-        self.train_predictions = None
-        self.test_predictions = None
-        self.search = None
-        self.hyperparams = None
-
-        if test_df is None:
-            self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(
-                train_df, train_df[prediction_column], test_size=TEST_SIZE
-            )
-        else:
-            self.X_train = train_df 
-            self.y_train = train_df[prediction_column]
-            self.X_test = test_df
-            self.y_test = test_df[prediction_column]
-
-        self.X_train = self.X_train.drop([prediction_column], axis=1)
-        self.X_test = self.X_test.drop([prediction_column], axis=1)
-
+class LightGBMRegressor(BaseModel):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+  
     def tune_hyper_parameters(self, params_constrained=None, hyperparams=None,
                                             early_stopping_rounds=10, eval_metric=EVAL_METRIC,
                                             scoring='neg_mean_squared_error', n_iter=25, verbose=0):

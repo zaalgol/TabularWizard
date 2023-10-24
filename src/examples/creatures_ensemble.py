@@ -117,16 +117,17 @@ def train_model():
     mlp_evaluations3 = evaluate.evaluate_train_and_test(mlp_model3, mlp_classifier3)
     ensemble_evaluations = evaluate.evaluate_train_and_test(ensemble_model, rf_classifier2)
     
-    print("*" * 500 + f"lgbm_evaluations: {lgbm_evaluations}")
-    print("*" * 500 + f"xgb_evaluations: {xgb_evaluations}")
-    print("*" * 500 + f"rf_evaluations: {rf_evaluations}")
-    print("*" * 500 + f"lgbm_evaluations2: {lgbm_evaluations2}")
-    print("*" * 500 + f"xgb_evaluations2: {xgb_evaluations2}")
-    print("*" * 500 + f"rf_evaluations2: {rf_evaluations2}")
+    print("*" * 500 + f"lgbm_evaluations: {lgbm_evaluations} + best_score_: {lgbm_model.best_score_}")
+    print("*" * 500 + f"xgb_evaluations: {xgb_evaluations} + best_score_: {xgb_model.best_score_}")
+    print("*" * 500 + f"rf_evaluations: {rf_evaluations} + best_score_: {rf_model.best_score_}")
+    print("*" * 500 + f"lgbm_evaluations2: {lgbm_evaluations2} + best_score_: {lgbm_model2.best_score_}")
+    print("*" * 500 + f"xgb_evaluations2: {xgb_evaluations2} + best_score_: {xgb_model2.best_score_}")
+    print("*" * 500 + f"rf_evaluations2: {rf_evaluations2} + best_score_: {rf_model2.best_score_}")
+    
+    print("*" * 500 + f"mlp_evaluations: {mlp_evaluations} + best_score_: {mlp_model.best_score_}")
+    print("*" * 500 + f"mlp_evaluations2: {mlp_evaluations2} + best_score_: {mlp_model2.best_score_}")
+    print("*" * 500 + f"mlp_evaluations3: {mlp_evaluations3} + best_score_: {mlp_model3.best_score_}")
     print("*" * 500 + f"ensemble_evaluations: {ensemble_evaluations}")
-    print("*" * 500 + f"mlp_evaluations: {mlp_evaluations}")
-    print("*" * 500 + f"mlp_evaluations2: {mlp_evaluations2}")
-    print("*" * 500 + f"mlp_evaluations3: {mlp_evaluations3}")
     t=0
 
 

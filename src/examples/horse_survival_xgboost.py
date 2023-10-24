@@ -23,7 +23,7 @@ def train_model():
     df = pd.read_csv(dataset_Path)
     df = perprocess_data(df)
 
-    xgboost_classifier = XgboostClassifier(train_df = df, prediction_column = 'outcome')
+    xgboost_classifier = XgboostClassifier(train_df = df, prediction_column = 'outcome', eval_metric="mlogloss")
     xgboost_classifier.tune_hyper_parameters()
     model = xgboost_classifier.train()
     pickle.dump(model, open(SAVED_MODEL_FILE, 'wb'))
