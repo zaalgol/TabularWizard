@@ -1,9 +1,4 @@
 from lightgbm import LGBMClassifier
-from sklearn.metrics import accuracy_score
-from sklearn.model_selection import KFold, train_test_split
-from sklearn.model_selection import GroupShuffleSplit
-from skopt import BayesSearchCV
-from src.base_model import BaseModel
 from src.classification.model.base_classifier_model import BaseClassfierModel
 
 
@@ -21,10 +16,9 @@ DEFAULT_PARAMS = {
         }
 
 class LightgbmClassifier(BaseClassfierModel):
-    def __init__(self, a=5, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.estimator = LGBMClassifier()
-        self.default_params = DEFAULT_PARAMS
 
     @property
     def default_params(self):

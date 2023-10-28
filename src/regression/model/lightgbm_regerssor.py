@@ -1,16 +1,10 @@
 #https://www.kaggle.com/code/mlisovyi/lightgbm-hyperparameter-optimisation-lb-0-761
 
-import lightgbm as lgb
+from lightgbm import LGBMRegressor
 from sklearn.model_selection import train_test_split
-from skopt import BayesSearchCV
-import matplotlib.pyplot as plt
-from sklearn.model_selection import KFold
+from src.regression.base_regressor_model import BaseRegressorrModel
 
-from src.base_model import BaseModel
-
-EVAL_METRIC = 'rmse'
-TEST_SIZE = 0.3
-DEFAULT_HYPER_PARAMETERS = {
+DEFAULT_PARAMS = {
     'learning_rate': (0.01, 0.3, 'log-uniform'),  # typical range from learning rate
     'num_leaves': (31, 200),  # depends on max_depth, should be smaller than 2^(max_depth)
     'max_depth': (3, 11),  # typical values can range from 3-10
@@ -25,32 +19,37 @@ DEFAULT_HYPER_PARAMETERS = {
 }
 
 
-class LightGBMRegressor(BaseModel):
+class LightGBMRegressor(BaseRegressorrModel):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.estimator = LGBMRegressor()
+
+    @property
+    def default_params(self):
+        return DEFAULT_PARAMS
   
-    def tune_hyper_parameters(self, params_constrained=None, hyperparams=None,
-                                            early_stopping_rounds=10, eval_metric=EVAL_METRIC,
-                                            scoring='neg_mean_squared_error', n_iter=25, verbose=0):
-        if hyperparams is None:
-            self.hyperparams = DEFAULT_HYPER_PARAMETERS
-        else:
-            self.hyperparams = hyperparams
+    # def tune_hyper_parameters(self, params_constrained=None, hyperparams=None,
+    #                                         early_stopping_rounds=10, eval_metric=EVAL_METRIC,
+    #                                         scoring='neg_mean_squared_error', n_iter=25, verbose=0):
+    #     if hyperparams is None:
+    #         self.hyperparams = DEFAULT_PARAMS
+    #     else:
+    #         self.hyperparams = hyperparams
 
-        lgbr = lgb.LGBMRegressor(metric=eval_metric, early_stopping_round=early_stopping_rounds,
-                                num_iterations=10000, n_jobs=-1, categorical_feature=params_constrained)
+    #     lgbr = lgb.LGBMRegressor(metric=eval_metric, early_stopping_round=early_stopping_rounds,
+    #                             num_iterations=10000, n_jobs=-1, categorical_feature=params_constrained)
         
-        kfold = KFold(n_splits=10)
-        self.search = BayesSearchCV(estimator=lgbr,
-                                    search_spaces=self.hyperparams,
-                                    scoring=scoring,
-                                    n_iter=n_iter,
-                                    cv=kfold,
-                                    verbose=verbose)
+    #     kfold = KFold(n_splits=10)
+    #     self.search = BayesSearchCV(estimator=lgbr,
+    #                                 search_spaces=self.hyperparams,
+    #                                 scoring=scoring,
+    #                                 n_iter=n_iter,
+    #                                 cv=kfold,
+    #                                 verbose=verbose)
 
-    def train(self):
-        eval_set = [(self.X_test, self.y_test)]
-        result = self.search.fit(self.X_train, self.y_train, eval_set=eval_set, eval_metric=EVAL_METRIC)
-        print("Best parameters:", self.search.best_params_)
-        print("Lowest RMSE: ", (-self.search.best_score_) ** (1 / 2.0))
-        return result
+    # def train(self):
+    #     eval_set = [(self.X_test, self.y_test)]
+    #     result = self.search.fit(self.X_train, self.y_train, eval_set=eval_set, eval_metric=EVAL_METRIC)
+    #     print("Best parameters:", self.search.best_params_)
+    #     print("Lowest RMSE: ", (-self.search.best_score_) ** (1 / 2.0))
+    #     return result

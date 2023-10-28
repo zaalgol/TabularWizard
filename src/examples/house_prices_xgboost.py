@@ -7,6 +7,8 @@ from src.data_preprocessing import DataPreprocessing
 import matplotlib.pyplot as plt
 from datetime import datetime
 
+from src.visualize import show_distrebution_of_categatial_column_valuse, show_missing
+
 
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 SAVED_MODEL_FOLDER = os.path.join('results', 'trained_models', 'regression', f" xgboost_{timestamp}")
@@ -18,6 +20,9 @@ train_data_path = 'datasets\house_prices_train.csv'
 def train_model():
     df = pd.read_csv(train_data_path)
     print(df)
+    dataPreprocessing = DataPreprocessing()
+    missing = dataPreprocessing.get_missing_values_per_coloun(df)
+    show_missing(df)
     df = perprocess_data(df)
     xgboost_classifier = XgboostRegressor(train_df = df, prediction_column = 'SalePrice')
     xgboost_classifier.tune_hyper_parameters()

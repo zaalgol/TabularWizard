@@ -18,13 +18,15 @@ DEFAULT_PARAMS = {
 }
 
 class XgboostClassifier(BaseClassfierModel):
-    def __init__(self, eval_metric=None, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        params = {}
-        if eval_metric is not None:
-            params['eval_metric'] = eval_metric
+    def __init__(self, train_df, prediction_column, split_column=None, test_size=None, *args, **kwargs):
+        # super().__init__(*args, **kwargs)
+        args_to_super = {k: v for k, v in locals().items() if v is not None and k in ['train_df', 'prediction_column', 'split_column', 'test_size']}
+        super().__init__(*args, **args_to_super)
+        # params = {}
+        # if eval_metric is not None:
+        #     params['eval_metric'] = eval_metric
 
-        self.estimator = xgb = XGBClassifier(use_label_encoder=False, **params)
+        self.estimator = XGBClassifier(use_label_encoder=False, **kwargs)
 
     @property
     def default_params(self):
