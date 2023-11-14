@@ -2,3 +2,4 @@ datasets/
 .venv/
 results/
 **/__pycache__/
+catboost_info/

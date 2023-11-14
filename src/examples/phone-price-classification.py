@@ -12,7 +12,7 @@ from src.data_preprocessing import DataPreprocessing
 from src.plot_data import plot_boxen_correlation_between_x_y, plot_corelation_between_all_columns, plot_point_correlation_between_x_y
 import matplotlib.pyplot as plt
 
-from src.visualize import show_missing
+from src.visualize import plot_all_correlation, plot_correlation_one_vs_others, plot_correlation_two_columns, show_distrebution_of_categatial_column_valuse, show_distribution_of_numeric_column_values, show_missing
 
 
 
@@ -39,7 +39,14 @@ def train_model():
     print(train_data.head())
 
     dataPreprocessing.describe_datafranme(train_data)
-    print(dataPreprocessing.get_missing_values_per_coloun(train_data))
+    # print(dataPreprocessing.get_missing_values_per_coloun(train_data))
+    # show_missing(train_data)
+    # plot_all_correlation(train_data)
+    # plot_correlation_one_vs_others(train_data, 'price_range')
+    show_distribution_of_numeric_column_values(train_data,'ram')
+    plot_correlation_two_columns(train_data,'price_range', 'ram')
+    
+
 
     # train_data = dataPreprocessing.one_hot_encode_column(train_data, 'color')
     # train_data = train_data.set_index('id')

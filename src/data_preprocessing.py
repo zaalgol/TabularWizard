@@ -1,18 +1,9 @@
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
+from sklearn.utils import resample
 
 class DataPreprocessing:
     def exclude_columns(self, df, columns_to_exclude):
-        """
-        Create a copy of a DataFrame with all columns except the specified ones.
-
-        Parameters:
-        - df (pd.DataFrame): The input DataFrame.
-        - columns_to_exclude (list of str): List of column names to exclude.
-
-        Returns:
-        - pd.DataFrame: A copy of the input DataFrame with columns excluded.
-        """
         return df.drop(columns=columns_to_exclude).copy()
 
     # example of mapping_dict: {'high': 3, 'medium': 2, 'low': 1}
@@ -35,9 +26,6 @@ class DataPreprocessing:
             df = self.one_hot_encode_column(df, column_name)
         return df
     
-
-    def get_all_categorical_columns_names(self, df):
-        return [f for f in df.columns if df.dtypes[f] == 'object']
     
     def one_hot_encode_all_categorical_columns(self, df):
         return pd.get_dummies(df,df.columns[df.dtypes == 'object'])
@@ -45,16 +33,6 @@ class DataPreprocessing:
 
 
     def one_hot_encode_column(self, dataframe, column_name):
-        """
-        Perform one-hot encoding on a specific column in a Pandas DataFrame.
-        
-        Parameters:
-        - dataframe (pd.DataFrame): The input DataFrame.
-        - column_name (str): The name of the column to be one-hot encoded.
-
-        Returns:
-        - pd.DataFrame: A copy of the input DataFrame with one-hot encoding for the specified column.
-        """
         # Make a copy of the original DataFrame to avoid modifying it in place
         encoded_df = dataframe.copy()
         
@@ -66,6 +44,9 @@ class DataPreprocessing:
         encoded_df.drop(columns=[column_name], inplace=True)
         
         return encoded_df
+    
+    def get_all_categorical_columns_names(self, df):
+        return [f for f in df.columns if df.dtypes[f] == 'object']
     
     def get_numeric_columns(self, df):
         return [f for f in df.columns if df.dtypes[f] != 'object']
@@ -82,8 +63,10 @@ class DataPreprocessing:
         new_df = df.copy()
         string_columns = new_df.select_dtypes(include=['object']).columns
         new_df[string_columns] = new_df[string_columns].fillna(new_df[string_columns].mode().iloc[0])
-
         return new_df
+    
+    def get_missing_values_per_coloun(self, df):
+        return df.isnull().sum()
     
     def scale_values_netween_0_to_1(self, df, columns):
         scaler = MinMaxScaler()
@@ -94,6 +77,47 @@ class DataPreprocessing:
         print(df.describe().T)
         return (df.describe().T)
     
-    def get_missing_values_per_coloun(self, df):
-        return df.isnull().sum()
+    def oversampling_minority_class(self, df, column_name, minority_class, majority_class):
+        
+        new_df = df.copy()
+        minority_rows = new_df[new_df[column_name]==minority_class]
+        majority_rows = new_df[new_df[column_name]==majority_class]
+
+        minority_upsampled = resample(minority_rows,
+                          replace=True, # sample with replacement
+                          n_samples=len(majority_rows), # match number in majority class
+                          random_state=27) # reproducible results
+
+        # combine majority and upsampled minority
+        return pd.concat([majority_rows, minority_upsampled])
+            
+    def majority_minority_class(self, df, column_name, minority_class, majority_class):
+        
+        new_df = df.copy()
+        minority_rows = new_df[new_df[column_name]==minority_class]
+        majority_rows = new_df[new_df[column_name]==majority_class]
+
+        majority_underampled = resample(majority_rows,
+                          replace=False, # sample with replacement
+                          n_samples=len(minority_rows), # match number in majority class
+                          random_state=27) # reproducible results
+
+        # combine majority and upsampled minority
+        return pd.concat([majority_underampled, minority_rows])
+    
+    def oversampling_minority_classifier(self, classifier, minority_class, majority_class):
+        sampling_df = self.oversampling_minority_class(pd.concat([classifier.X_train, classifier.y_train], axis=1),
+                                                         classifier.y_train.name, minority_class, majority_class)
+        print(sampling_df.Class.value_counts())
+        classifier.y_train = sampling_df.Class
+        classifier.X_train = sampling_df.drop('Class', axis=1)
+        
+
+    def majority_minority_classifier(self, classifier, minority_class, majority_class):
+        sampling_df = self.majority_minority_class(pd.concat([classifier.X_train, classifier.y_train], axis=1),
+                                                         classifier.y_train.name, minority_class, majority_class)
+        classifier.y_train = sampling_df.Class
+        classifier.X_train = sampling_df.drop('Class', axis=1)
+
+
 
