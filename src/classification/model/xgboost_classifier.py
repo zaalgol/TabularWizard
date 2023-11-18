@@ -1,5 +1,6 @@
-from xgboost import XGBClassifier
-
+import os
+from xgboost import XGBClassifier, plot_tree
+import matplotlib.pyplot as plt
 from src.classification.model.base_classifier_model import BaseClassfierModel
 
 
@@ -18,20 +19,20 @@ DEFAULT_PARAMS = {
 }
 
 class XgboostClassifier(BaseClassfierModel):
-    def __init__(self, train_df, prediction_column, split_column=None, test_size=None, *args, **kwargs):
-        # super().__init__(*args, **kwargs)
-        args_to_super = {k: v for k, v in locals().items() if v is not None and k in ['train_df', 'prediction_column', 'split_column', 'test_size']}
-        super().__init__(*args, **args_to_super)
-        # params = {}
-        # if eval_metric is not None:
-        #     params['eval_metric'] = eval_metric
-
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.estimator = XGBClassifier(use_label_encoder=False, **kwargs)
 
     @property
     def default_params(self):
         return DEFAULT_PARAMS
-
+    
+    def save_tree_diagram(self, tree_index=0, model_folder='', filename='tree_diagram.png'):
+        plot_tree(self.search.best_estimator_, num_trees=tree_index, rankdir='LR')
+        fig = plt.gcf()
+        fig.set_size_inches(30, 15)
+        plt.savefig(os.path.join(model_folder, filename), bbox_inches='tight')
+        plt.close()
 
     # def plot (self, result):
     #     from xgboost import plot_importance

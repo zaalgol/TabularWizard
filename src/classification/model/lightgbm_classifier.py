@@ -1,6 +1,7 @@
-from lightgbm import LGBMClassifier
+import os
+from lightgbm import LGBMClassifier, plot_tree
 from src.classification.model.base_classifier_model import BaseClassfierModel
-
+import matplotlib.pyplot as plt
 
 DEFAULT_PARAMS = {
             'class_weight': [None, 'balanced'],
@@ -23,4 +24,10 @@ class LightgbmClassifier(BaseClassfierModel):
     @property
     def default_params(self):
         return DEFAULT_PARAMS
+    
+
+    def save_tree_diagram(self, tree_index=0, model_folder='', filename='tree_diagram.png'):
+        plot_tree(self.search.best_estimator_, tree_index=tree_index, figsize=(20, 10), show_info=['split_gain', 'internal_value', 'internal_count', 'leaf_count'])
+        plt.savefig(os.path.join(model_folder, filename))
+        plt.close()
 

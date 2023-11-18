@@ -1,10 +1,7 @@
+import os
 from sklearn.neural_network import MLPClassifier
-from sklearn.metrics import accuracy_score
-from sklearn.model_selection import KFold, train_test_split
-from sklearn.model_selection import GroupShuffleSplit
-from skopt import BayesSearchCV
-from src.base_model import BaseModel
 from src.classification.model.base_classifier_model import BaseClassfierModel
+import matplotlib.pyplot as plt
 
 DEFAULT_PARAMS = {
     # 'hidden_layer_sizes': [(50, 50)],
@@ -24,3 +21,16 @@ class MLPNetClassifier(BaseClassfierModel):
     @property
     def default_params(self):
         return DEFAULT_PARAMS
+    
+    def visualize_weights(self,  model_folder='', filename='mlp_weights_visualization.png'):
+        layers = len(self.search.best_estimator_.coefs_)
+        fig, axes = plt.subplots(nrows=1, ncols=layers, figsize=(20, 5))
+        for i in range(layers):
+            ax = axes[i]
+            ax.matshow(self.search.best_estimator_.coefs_[i], cmap='viridis')
+            ax.set_title(f'Layer {i+1}')
+            ax.set_xlabel('Neurons in Layer')
+            ax.set_ylabel('Input Features')
+        plt.tight_layout()
+        plt.savefig(os.path.join(model_folder, filename))
+        plt.close(fig)

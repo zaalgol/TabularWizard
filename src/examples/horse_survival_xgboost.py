@@ -23,7 +23,7 @@ def train_model():
     df = pd.read_csv(dataset_Path)
     df = perprocess_data(df)
 
-    xgboost_classifier = XgboostClassifier(train_df = df, prediction_column = 'outcome', eval_metric="mlogloss")
+    xgboost_classifier = XgboostClassifier(train_df = df, prediction_column = 'outcome')
     xgboost_classifier.tune_hyper_parameters()
     model = xgboost_classifier.train()
     pickle.dump(model, open(SAVED_MODEL_FILE, 'wb'))
@@ -34,6 +34,9 @@ def train_model():
     print(f"model evaluations: {evaluations}")
     with open(SAVED_MODEL_EVALUATION, 'w') as file:
         file.write(evaluations)
+
+    xgboost_classifier.save_feature_importances(model_folder=SAVED_MODEL_FOLDER)
+    xgboost_classifier.save_tree_diagram(tree_index=0, model_folder=SAVED_MODEL_FOLDER)
 
 
 def use_traned_model():

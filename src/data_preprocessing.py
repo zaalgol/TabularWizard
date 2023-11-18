@@ -78,7 +78,6 @@ class DataPreprocessing:
         return (df.describe().T)
     
     def oversampling_minority_class(self, df, column_name, minority_class, majority_class):
-        
         new_df = df.copy()
         minority_rows = new_df[new_df[column_name]==minority_class]
         majority_rows = new_df[new_df[column_name]==majority_class]
@@ -92,7 +91,6 @@ class DataPreprocessing:
         return pd.concat([majority_rows, minority_upsampled])
             
     def majority_minority_class(self, df, column_name, minority_class, majority_class):
-        
         new_df = df.copy()
         minority_rows = new_df[new_df[column_name]==minority_class]
         majority_rows = new_df[new_df[column_name]==majority_class]

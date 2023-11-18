@@ -1,7 +1,9 @@
 from abc import abstractmethod
+import os
 from sklearn.model_selection import KFold
 from skopt import BayesSearchCV
 from src.base_model import BaseModel
+import matplotlib.pyplot as plt
 
 
 class BaseClassfierModel(BaseModel):
@@ -33,4 +35,15 @@ class BaseClassfierModel(BaseModel):
             print("Best accuracy:", self.search.best_score_)
 
             return result
+        
+        def save_feature_importances(self, model_folder='', filename='feature_importances.png'):
+            # Default implementation, to be overridden in derived classes
+            feature_importances = self.search.best_estimator_.feature_importances_
+            feature_names = self.X_train.columns
+            plt.figure(figsize=(12, 6))
+            plt.barh(feature_names, feature_importances)
+            plt.xlabel('Feature Importance')
+            plt.ylabel('Feature')
+            plt.savefig(os.path.join(model_folder, filename))
+            plt.close()
 

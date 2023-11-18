@@ -1,10 +1,8 @@
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score
-from sklearn.model_selection import KFold, train_test_split
-from sklearn.model_selection import GroupShuffleSplit
-from skopt import BayesSearchCV
-from src.base_model import BaseModel
 from src.classification.model.base_classifier_model import BaseClassfierModel
+import matplotlib.pyplot as plt
+from sklearn.tree import plot_tree
+import os
 
 DEFAULT_PARAMS = {
     'n_estimators': list(range(50, 300, 50)),
@@ -31,3 +29,9 @@ class RandomForestClassifierCustom(BaseClassfierModel):
         print("Best accuracy:", self.search.best_score_)
 
         return result
+    
+    def save_tree_diagram(self, tree_index=0, model_folder='', filename='random_forest_tree_diagram.png', dpi=300):
+        plt.figure(figsize=(20, 10))
+        plot_tree(self.estimator.estimators_[tree_index], filled=True, feature_names=self.X_train.columns, rounded=True, class_names=True)
+        plt.savefig(os.path.join(model_folder, filename), format='png', dpi=dpi)
+        plt.close()

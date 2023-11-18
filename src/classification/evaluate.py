@@ -24,5 +24,5 @@ class Evaluate:
         test_score = round(accuracy_score(classifier.y_test, y_predict), 3)
         test_evaluations = self.evaluate_classification (classifier.y_test, y_predict)
 
-        return "\n".join(["Train eval:",  str(train_evaluations), f'score: {train_score}',  "Test eval:", str(test_evaluations), f'score: {test_score}'])
+        return "\n".join(["\nTrain eval:",  str(train_evaluations), f'score: {train_score}',  "\nTest eval:", str(test_evaluations), f'score: {test_score}', "*" * 100, "\n"])
         
