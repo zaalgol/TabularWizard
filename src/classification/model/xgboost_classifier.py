@@ -19,9 +19,9 @@ DEFAULT_PARAMS = {
 }
 
 class XgboostClassifier(BaseClassfierModel):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.estimator = XGBClassifier(use_label_encoder=False, **kwargs)
+    def __init__(self, train_df, prediction_column, *args, split_column=None, test_size=0.3, **kwargs):
+        super().__init__(train_df, prediction_column, split_column=split_column, test_size=test_size)
+        self.estimator = XGBClassifier(*args, **kwargs)
 
     @property
     def default_params(self):

@@ -43,10 +43,14 @@ def train_model():
     print(train_data.head())
 
     # results = []
-
+    start_time = datetime.now().strftime("%H:%M:%S")
+    # lgbm_classifier = LightgbmClassifier(train_df = train_data, prediction_column = 'type', device='gpu')
     lgbm_classifier = LightgbmClassifier(train_df = train_data, prediction_column = 'type')
     lgbm_classifier.tune_hyper_parameters(scoring='accuracy')
     model = lgbm_classifier.train()
+    end_time = datetime.now().strftime("%H:%M:%S")
+    print("start time =", start_time)
+    print("end time =", end_time)
     pickle.dump(model, open(SAVED_MODEL_FILE, 'wb'))
 
     evaluate = Evaluate()

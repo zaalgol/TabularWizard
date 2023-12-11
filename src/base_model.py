@@ -1,8 +1,10 @@
+from abc import abstractmethod
 from sklearn.model_selection import GroupShuffleSplit
 from sklearn.model_selection import train_test_split
 
+
 class BaseModel:
-    def __init__(self, train_df, prediction_column, split_column=None, test_size=0.3):
+    def __init__(self, train_df, prediction_column, split_column, test_size=0.3):
         self.search = None
 
         if split_column is None:
@@ -21,3 +23,8 @@ class BaseModel:
 
         self.X_train = self.X_train.drop([prediction_column], axis=1)
         self.X_test = self.X_test.drop([prediction_column], axis=1)
+
+        @property
+        @abstractmethod
+        def default_params(self):
+            return {}

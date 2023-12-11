@@ -41,11 +41,14 @@ def train_model():
     train_data = dataPreprocessing.map_order_column(train_data, 'type', {"Ghoul":1, "Goblin":2, "Ghost":0})
     train_data = train_data.set_index('id')
     print(train_data.head())
+    print(len(train_data.index))
+    print(len(train_data.columns))
+
 
     # results = []
 
     classifier = MLPNetClassifier(train_df = train_data, prediction_column = 'type')
-    classifier.tune_hyper_parameters(scoring='accuracy',n_iter=200)
+    classifier.tune_hyper_parameters(scoring='accuracy')
     model = classifier.train()
     pickle.dump(model, open(SAVED_MODEL_FILE, 'wb'))
 

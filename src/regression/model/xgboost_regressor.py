@@ -25,9 +25,9 @@ DEFAULT_PARAMS = {
         }
 
 class XgboostRegressor(BaseRegressorrModel):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.estimator = XGBRegressor()
+    def __init__(self, train_df, prediction_column, *args, split_column=None, test_size=0.3, **kwargs):
+        super().__init__(train_df, prediction_column, split_column=split_column, test_size=test_size)
+        self.estimator = XGBRegressor(*args, **kwargs)
 
     @property
     def default_params(self):

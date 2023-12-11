@@ -54,16 +54,9 @@ def train_model():
     # results = []
 
     mlp_classifier = MLPNetClassifier(train_df = train_data.copy(), prediction_column = 'type')
-    mlp_classifier.tune_hyper_parameters(scoring='accuracy', n_iter=25)
+    mlp_classifier.tune_hyper_parameters(scoring='accuracy')
     mlp_model = mlp_classifier.train()
 
-    mlp_classifier2 = MLPNetClassifier(train_df = train_data.copy(), prediction_column = 'type')
-    mlp_classifier2.tune_hyper_parameters(scoring='accuracy')
-    mlp_model2 = mlp_classifier2.train()
-
-    mlp_classifier3 = MLPNetClassifier(train_df = train_data.copy(), prediction_column = 'type')
-    mlp_classifier3.tune_hyper_parameters(scoring='accuracy',n_iter=70)
-    mlp_model3 = mlp_classifier3.train()
     # pickle.dump(rf_model, open(RF_SAVED_MODEL_FILE, 'wb'))
 
     rf_classifier = RandomForestClassifierCustom(train_df = train_data.copy(), prediction_column = 'type')
@@ -101,7 +94,7 @@ def train_model():
     
     estimators = [('lgbm_model2', lgbm_model2), ('xgb_model2', xgb_model2), ('rf_model2', rf_model2), \
                    ('lgbm_model', lgbm_model), ('xgb_model', xgb_model), ('rf_model', rf_model), \
-                   ('mlp_model', mlp_model), ('mlp_model2', mlp_model2), ('mlp_model3', mlp_model3)]
+                   ('mlp_model', mlp_model)]
     ensemble = VotingClassifier(estimators)
     ensemble_model = ensemble.fit(rf_classifier2.X_train, rf_classifier2.y_train)
     evaluate = Evaluate()
@@ -113,8 +106,6 @@ def train_model():
     xgb_evaluations2 = evaluate.evaluate_train_and_test(xgb_model2, xgb_classifier2)
     rf_evaluations2 = evaluate.evaluate_train_and_test(rf_model2, rf_classifier2)
     mlp_evaluations = evaluate.evaluate_train_and_test(mlp_model, mlp_classifier)
-    mlp_evaluations2 = evaluate.evaluate_train_and_test(mlp_model2, mlp_classifier2)
-    mlp_evaluations3 = evaluate.evaluate_train_and_test(mlp_model3, mlp_classifier3)
     ensemble_evaluations = evaluate.evaluate_train_and_test(ensemble_model, rf_classifier2)
     
     print("*" * 500 + f"lgbm_evaluations: {lgbm_evaluations} + best_score_: {lgbm_model.best_score_}")
@@ -125,8 +116,6 @@ def train_model():
     print("*" * 500 + f"rf_evaluations2: {rf_evaluations2} + best_score_: {rf_model2.best_score_}")
     
     print("*" * 500 + f"mlp_evaluations: {mlp_evaluations} + best_score_: {mlp_model.best_score_}")
-    print("*" * 500 + f"mlp_evaluations2: {mlp_evaluations2} + best_score_: {mlp_model2.best_score_}")
-    print("*" * 500 + f"mlp_evaluations3: {mlp_evaluations3} + best_score_: {mlp_model3.best_score_}")
     print("*" * 500 + f"ensemble_evaluations: {ensemble_evaluations}")
     t=0
 

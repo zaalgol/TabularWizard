@@ -9,12 +9,6 @@ import matplotlib.pyplot as plt
 class BaseClassfierModel(BaseModel):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
-            # self.default_params = {}
-            
-        @property
-        @abstractmethod
-        def default_params(self):
-            return {}
         
         def tune_hyper_parameters(self, params=None, scoring='r2', kfold=10, n_iter=50):
             if params is None:
