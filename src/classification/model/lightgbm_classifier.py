@@ -1,7 +1,9 @@
 import os
 from lightgbm import LGBMClassifier, plot_tree
+from src.base_preprocessor import BasePreprocessor
 from src.classification.model.base_classifier_model import BaseClassfierModel
 import matplotlib.pyplot as plt
+from sklearn.pipeline import Pipeline
 
 DEFAULT_PARAMS = {
             'class_weight': [None, 'balanced'],
@@ -17,9 +19,13 @@ DEFAULT_PARAMS = {
         }
 
 class LightgbmClassifier(BaseClassfierModel):
-    def __init__(self, train_df, prediction_column, *args, split_column=None, test_size=0.3, **kwargs):
+    def __init__(self, train_df, prediction_column, *args, split_column=None, test_size=0.3, preprocessor=BasePreprocessor(), **kwargs):
         super().__init__(train_df, prediction_column, split_column=split_column, test_size=test_size)
-        self.estimator = LGBMClassifier(*args, **kwargs)
+        # self.estimator = LGBMClassifier(*args, **kwargs) 
+        self.estimator = Pipeline(steps=[
+            ('preprocessor', preprocessor),
+            ('model', LGBMClassifier()) # still need to add  *args, **kwargs
+        ])
 
     @property
     def default_params(self):
