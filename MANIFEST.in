@@ -1,0 +1,9 @@
+# Exclude .git and other non-essential files
+exclude .git
+exclude .venv
+exclude .gitignore
+exclude .gitattributes
+# You can also exclude other files and directories that are not needed
+exclude tests/*
+exclude *.md
+exclude LICENSE

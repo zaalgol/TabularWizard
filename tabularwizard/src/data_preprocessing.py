@@ -5,6 +5,10 @@ from sklearn.utils import resample
 class DataPreprocessing:
     def exclude_columns(self, df, columns_to_exclude):
         return df.drop(columns=columns_to_exclude).copy()
+    
+    def sanitize_column_names(self, df):
+        df.columns = [col.replace(',', '').replace(':', '').replace('"', '').replace('[', '').replace(']', '').replace('{', '').replace('}', '') for col in df.columns]
+        return df
 
     # example of mapping_dict: {'high': 3, 'medium': 2, 'low': 1}
     def map_order_column(self, df, column_name, mapping_dict):
@@ -28,7 +32,7 @@ class DataPreprocessing:
     
     
     def one_hot_encode_all_categorical_columns(self, df):
-        return pd.get_dummies(df,df.columns[df.dtypes == 'object'])
+        return pd.get_dummies(df)
 
 
 
@@ -59,7 +63,7 @@ class DataPreprocessing:
             new_df.fillna(df.mean(numeric_only=True).round(1), inplace=True)
         return new_df
     
-    def fill_missing_not_numeric_cells(self, df, median_stratay=True):
+    def fill_missing_not_numeric_cells(self, df):
         new_df = df.copy()
         string_columns = new_df.select_dtypes(include=['object']).columns
         new_df[string_columns] = new_df[string_columns].fillna(new_df[string_columns].mode().iloc[0])

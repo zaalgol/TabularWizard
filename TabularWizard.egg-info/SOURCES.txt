@@ -1,0 +1,7 @@
+MANIFEST.in
+setup.py
+TabularWizard.egg-info/PKG-INFO
+TabularWizard.egg-info/SOURCES.txt
+TabularWizard.egg-info/dependency_links.txt
+TabularWizard.egg-info/requires.txt
+TabularWizard.egg-info/top_level.txt
