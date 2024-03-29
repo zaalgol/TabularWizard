@@ -1,10 +1,10 @@
 import pickle
 import os
 import pandas as pd
-from src.plot_data import plot_feature_importances, plot_model
-from src.regression.evaluate import Evaluate
-from src.regression.model.lightgbm_regerssor import LightGBMRegressor
-from src.data_preprocessing import DataPreprocessing
+from tabularwizard.src.plot_data import plot_feature_importances, plot_model
+from tabularwizard.src.regression.evaluate import Evaluate
+from tabularwizard.src.regression.model.lightgbm_regerssor import LightGBMRegressor
+from tabularwizard.src.data_preprocessing import DataPreprocessing
 import matplotlib.pyplot as plt
 from datetime import datetime
 

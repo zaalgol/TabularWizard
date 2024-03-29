@@ -2,8 +2,9 @@ from abc import abstractmethod
 import os
 from sklearn.model_selection import KFold
 from skopt import BayesSearchCV
-from src.base_model import BaseModel
+from tabularwizard.src.base_model import BaseModel
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 class BaseClassfierModel(BaseModel):
@@ -25,6 +26,7 @@ class BaseClassfierModel(BaseModel):
             
         def train(self):
             result = self.search.fit(self.X_train, self.y_train)
+
             print("Best parameters:", self.search.best_params_)
             print("Best accuracy:", self.search.best_score_)
 

@@ -2,9 +2,9 @@
 import os
 import pickle
 import pandas as pd
-from src.classification.evaluate import Evaluate
-from src.classification.model.xgboost_classifier import XgboostClassifier
-from src.data_preprocessing import DataPreprocessing
+from tabularwizard.src.classification.evaluate import Evaluate
+from tabularwizard.src.classification.model.xgboost_classifier import XgboostClassifier
+from tabularwizard.src.data_preprocessing import DataPreprocessing
 from datetime import datetime
 
 
@@ -14,8 +14,8 @@ SAVED_MODEL_FOLDER = os.path.join('results', 'trained_models', 'classification',
 os.makedirs(SAVED_MODEL_FOLDER)
 SAVED_MODEL_FILE = os.path.join(SAVED_MODEL_FOLDER, 'finalized_lgbm_model.sav')
 SAVED_MODEL_EVALUATION = os.path.join(SAVED_MODEL_FOLDER, 'model_eval')
-train_path = "datasets/ghouls-goblins-and-ghosts-boo/train.csv"
-test_path = "datasets/ghouls-goblins-and-ghosts-boo/test.csv"
+train_path = "tabularwizard/datasets/ghouls-goblins-and-ghosts-boo/train.csv"
+test_path = "tabularwizard/datasets/ghouls-goblins-and-ghosts-boo/test.csv"
 
 dataPreprocessing  = DataPreprocessing()
 

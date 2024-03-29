@@ -1,7 +1,7 @@
 import os
 from xgboost import XGBClassifier, plot_tree
 import matplotlib.pyplot as plt
-from src.classification.model.base_classifier_model import BaseClassfierModel
+from tabularwizard.src.classification.model.base_classifier_model import BaseClassfierModel
 
 
 DEFAULT_PARAMS = {

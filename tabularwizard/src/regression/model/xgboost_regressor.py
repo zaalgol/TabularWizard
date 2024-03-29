@@ -8,7 +8,7 @@ from xgboost import XGBRegressor, plot_tree
 import matplotlib.pyplot as plt
 from xgboost import plot_importance
 from sklearn.model_selection import KFold
-from src.regression.base_regressor_model import BaseRegressorrModel
+from tabularwizard.src.regression.base_regressor_model import BaseRegressorrModel
 
 
 DEFAULT_PARAMS = {

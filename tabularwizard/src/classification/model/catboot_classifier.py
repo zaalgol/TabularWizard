@@ -2,7 +2,7 @@ import os
 import matplotlib.pyplot as plt
 
 from catboost import CatBoostClassifier
-from src.classification.model.base_classifier_model import BaseClassfierModel
+from tabularwizard.src.classification.model.base_classifier_model import BaseClassfierModel
 
 
 DEFAULT_PARAMS = {

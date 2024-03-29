@@ -1,6 +1,6 @@
 import os
 from lightgbm import LGBMClassifier, plot_tree
-from src.classification.model.base_classifier_model import BaseClassfierModel
+from tabularwizard.src.classification.model.base_classifier_model import BaseClassfierModel
 import matplotlib.pyplot as plt
 
 DEFAULT_PARAMS = {

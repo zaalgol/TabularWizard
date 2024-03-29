@@ -65,8 +65,14 @@ class DataPreprocessing:
     
     def fill_missing_not_numeric_cells(self, df):
         new_df = df.copy()
-        string_columns = new_df.select_dtypes(include=['object']).columns
-        new_df[string_columns] = new_df[string_columns].fillna(new_df[string_columns].mode().iloc[0])
+        categorical_columns = df.select_dtypes(include=['object']).columns
+    
+        # Filling missing values in categorical columns with their respective modes.
+        for column in categorical_columns:
+            mode_value = new_df[column].mode()[0]  # Getting the mode value of the column
+            new_df[column].fillna(mode_value, inplace=True)
+    
+
         return new_df
     
     def get_missing_values_per_coloun(self, df):

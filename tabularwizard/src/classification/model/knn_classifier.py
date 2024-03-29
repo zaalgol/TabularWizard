@@ -1,5 +1,5 @@
 from sklearn.neighbors import KNeighborsClassifier
-from src.classification.model.base_classifier_model import BaseClassfierModel
+from tabularwizard.src.classification.model.base_classifier_model import BaseClassfierModel
 
 
 DEFAULT_PARAMS = {

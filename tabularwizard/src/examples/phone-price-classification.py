@@ -4,15 +4,15 @@ from datetime import datetime
 import os
 import pickle
 import pandas as pd
-from src.classification.evaluate import Evaluate
-from src.classification.model.catboot_classifier import CatboostClassifier
-from src.classification.model.knn_classifier import KnnClassifier
-from src.classification.model.lightgbm_classifier import LightgbmClassifier
-from src.data_preprocessing import DataPreprocessing
-from src.plot_data import plot_boxen_correlation_between_x_y, plot_corelation_between_all_columns, plot_point_correlation_between_x_y
+from tabularwizard.src.classification.evaluate import Evaluate
+from tabularwizard.src.classification.model.catboot_classifier import CatboostClassifier
+from tabularwizard.src.classification.model.knn_classifier import KnnClassifier
+from tabularwizard.src.classification.model.lightgbm_classifier import LightgbmClassifier
+from tabularwizard.src.data_preprocessing import DataPreprocessing
+from tabularwizard.src.plot_data import plot_boxen_correlation_between_x_y, plot_corelation_between_all_columns, plot_point_correlation_between_x_y
 import matplotlib.pyplot as plt
 
-from src.visualize import plot_all_correlation, plot_correlation_one_vs_others, plot_correlation_two_columns, show_distrebution_of_categatial_column_valuse, show_distribution_of_numeric_column_values, show_missing
+from tabularwizard.src.visualize import plot_all_correlation, plot_correlation_one_vs_others, plot_correlation_two_columns, show_distrebution_of_categatial_column_valuse, show_distribution_of_numeric_column_values, show_missing
 
 
 
@@ -21,8 +21,8 @@ SAVED_MODEL_FOLDER = os.path.join('results', 'trained_models', 'classification',
 os.makedirs(SAVED_MODEL_FOLDER)
 SAVED_MODEL_FILE = os.path.join(SAVED_MODEL_FOLDER, 'finalized_lgbm_model.sav')
 SAVED_MODEL_EVALUATION = os.path.join(SAVED_MODEL_FOLDER, 'model_eval')
-train_path = "datasets/phone-price-classification/train.csv"
-# test_path = "datasets/ghouls-goblins-and-ghosts-boo/test.csv"
+train_path = "tabularwizard/datasets/phone-price-classification/train.csv"
+# test_path = "tabularwizard/datasets/ghouls-goblins-and-ghosts-boo/test.csv"
 
 dataPreprocessing  = DataPreprocessing()
 

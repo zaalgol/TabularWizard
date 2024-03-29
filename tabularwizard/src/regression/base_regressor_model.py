@@ -1,6 +1,6 @@
 from sklearn.model_selection import KFold
 from skopt import BayesSearchCV
-from src.base_model import BaseModel
+from tabularwizard.src.base_model import BaseModel
 
 
 class BaseRegressorrModel(BaseModel):

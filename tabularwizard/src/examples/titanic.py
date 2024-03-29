@@ -2,9 +2,9 @@ from datetime import datetime
 import os
 import pickle
 import pandas as pd
-from src.classification.evaluate import Evaluate
-from src.classification.model.lightgbm_classifier import LightgbmClassifier
-from src.data_preprocessing import DataPreprocessing
+from tabularwizard.src.classification.evaluate import Evaluate
+from tabularwizard.src.classification.model.lightgbm_classifier import LightgbmClassifier
+from tabularwizard.src.data_preprocessing import DataPreprocessing
 from sklearn import preprocessing
 
 
@@ -14,7 +14,7 @@ SAVED_MODEL_FOLDER = os.path.join('results', 'trained_models', 'classification',
 os.makedirs(SAVED_MODEL_FOLDER)
 SAVED_MODEL_FILE = os.path.join(SAVED_MODEL_FOLDER, 'finalized_lgbm_model.sav')
 SAVED_MODEL_EVALUATION = os.path.join(SAVED_MODEL_FOLDER, 'model_eval')
-dataset_Path = "datasets/titanic.csv"
+dataset_Path = "tabularwizard/datasets/titanic.csv"
 
 
 

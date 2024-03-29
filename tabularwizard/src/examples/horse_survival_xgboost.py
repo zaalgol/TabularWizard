@@ -5,9 +5,9 @@ import os
 import pickle
 import pandas as pd
 from sklearn.metrics import confusion_matrix
-from src.classification.evaluate import Evaluate
-from src.classification.model.xgboost_classifier import XgboostClassifier
-from src.data_preprocessing import DataPreprocessing
+from tabularwizard.src.classification.evaluate import Evaluate
+from tabularwizard.src.classification.model.xgboost_classifier import XgboostClassifier
+from tabularwizard.src.data_preprocessing import DataPreprocessing
 
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 SAVED_MODEL_FOLDER = os.path.join('results', 'trained_models', 'classification', f"house_prices_xgboos_{timestamp}")

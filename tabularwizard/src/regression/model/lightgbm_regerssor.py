@@ -2,7 +2,7 @@
 
 from lightgbm import LGBMRegressor
 from sklearn.model_selection import train_test_split
-from src.regression.base_regressor_model import BaseRegressorrModel
+from tabularwizard.src.regression.base_regressor_model import BaseRegressorrModel
 
 DEFAULT_PARAMS = {
     'learning_rate': (0.01, 0.3, 'log-uniform'),  # typical range from learning rate

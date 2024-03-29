@@ -1,7 +1,7 @@
 import os
 from sklearn.model_selection import GridSearchCV, KFold
 from sklearn.neural_network import MLPClassifier
-from src.classification.model.base_classifier_model import BaseClassfierModel
+from tabularwizard.src.classification.model.base_classifier_model import BaseClassfierModel
 import matplotlib.pyplot as plt
 
 DEFAULT_PARAMS = {
