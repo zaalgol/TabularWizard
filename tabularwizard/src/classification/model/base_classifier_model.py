@@ -25,11 +25,13 @@ class BaseClassfierModel(BaseModel):
                                         verbose=0)
             
         def train(self):
-            result = self.search.fit(self.X_train, self.y_train)
-
-            print("Best parameters:", self.search.best_params_)
-            print("Best accuracy:", self.search.best_score_)
-
+            if self.search: # with hyperparameter tuining
+                result = self.search.fit(self.X_train, self.y_train)
+                print("Best parameters:", self.search.best_params_)
+                print("Best accuracy:", self.search.best_score_)
+            else:
+                result = self.estimator.fit(self.X_train, self.y_train)
+                print("Best accuracy:", self.estimator.best_score_)
             return result
         
         def save_feature_importances(self, model_folder='', filename='feature_importances.png'):
