@@ -17,7 +17,13 @@ class BaseRegressorrModel(BaseModel):
                                         *args, **kwargs)
             
         def train(self):
-            result = self.search.fit(self.X_train, self.y_train)
-            print("Best parameters:", self.search.best_params_)
-            print("Lowest RMSE: ", (-self.search.best_score_) ** (1 / 2.0))
-            return result
+            if self.search:
+                result = self.search.fit(self.X_train, self.y_train)
+                print("Best parameters:", self.search.best_params_)
+                print("Lowest RMSE: ", (-self.search.best_score_) ** (1 / 2.0))
+            else:
+                result = self.estimator.fit(self.X_train, self.y_train)
+                print("Best accuracy:", self.estimator.best_score_)
+                return result
+
+                

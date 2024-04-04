@@ -6,6 +6,10 @@ class DataPreprocessing:
     def exclude_columns(self, df, columns_to_exclude):
         return df.drop(columns=columns_to_exclude).copy()
     
+    def exclude_other_columns(self, df, columns):
+        columns_to_keep = [col for col in columns if col in df.columns]
+        return df[columns_to_keep]
+
     def sanitize_column_names(self, df):
         df.columns = [col.replace(',', '').replace(':', '').replace('"', '').replace('[', '').replace(']', '').replace('{', '').replace('}', '') for col in df.columns]
         return df
