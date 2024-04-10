@@ -57,7 +57,7 @@ def train_model():
         file.write(evaluations)
 
     classifier.save_feature_importances(model_folder=SAVED_MODEL_FOLDER)
-    classifier.save_tree_diagram(tree_index=0, model_folder=SAVED_MODEL_FOLDER)
+    # classifier.save_tree_diagram(tree_index=0, model_folder=SAVED_MODEL_FOLDER)
 
 
 if __name__ == '__main__':

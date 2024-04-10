@@ -5,13 +5,18 @@ from skopt import BayesSearchCV
 from tabularwizard.src.base_model import BaseModel
 import matplotlib.pyplot as plt
 import numpy as np
+from imblearn.over_sampling import SMOTE
 
 
 class BaseClassfierModel(BaseModel):
-        def __init__(self, *args, **kwargs):
-            super().__init__(*args, **kwargs)
-        
-        def tune_hyper_parameters(self, params=None, scoring='r2', kfold=10, n_iter=50):
+        def __init__(self, train_df, prediction_column, split_column=None, test_size=None):
+            super().__init__(train_df, prediction_column, split_column, test_size)
+
+            self.unique_classes = train_df[prediction_column].nunique()
+            smote = SMOTE(random_state=42)
+            self.X_train, self.y_train = smote.fit_resample(self.X_train, self.y_train)
+
+        def tune_hyper_parameters(self, params=None, scoring=None, kfold=5, n_iter=500):
             if params is None:
                 params = self.default_params
             Kfold = KFold(n_splits=kfold)  
@@ -21,14 +26,16 @@ class BaseClassfierModel(BaseModel):
                                         scoring=scoring,
                                         n_iter=n_iter,
                                         n_jobs=1, 
+                                        n_points=3,
                                         cv=Kfold,
-                                        verbose=0)
+                                        verbose=0,
+                                        random_state=0)
             
         def train(self):
             if self.search: # with hyperparameter tuining
-                result = self.search.fit(self.X_train, self.y_train)
-                print("Best parameters:", self.search.best_params_)
-                print("Best accuracy:", self.search.best_score_)
+                result = self.search.fit(self.X_train, self.y_train, callback=self.callbacks)
+                print("Best Cross-Validation parameters:", self.search.best_params_)
+                print("Best Cross-Validation score:", self.search.best_score_)
             else:
                 result = self.estimator.fit(self.X_train, self.y_train)
                 print("Best accuracy:", self.estimator.best_score_)

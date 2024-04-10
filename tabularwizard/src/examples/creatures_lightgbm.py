@@ -26,6 +26,10 @@ pd.set_option("display.max_columns",None)
 def use_traned_model():
     pass
 
+params = {'colsample_bytree': 0.09854898073399448, 'learning_rate': 0.020462709433918657,
+            'max_bin': 1000, 'max_depth': 256, 'min_child_samples': 24, 'min_child_weight': 0.01,
+            'n_estimators': 992, 'num_leaves': 2,
+            'reg_alpha': 0.5, 'reg_lambda': 0.5, 'subsample': 0.9293522541996262, 'subsample_freq': 10}
 
 def train_model():
     train_data = pd.read_csv(train_path)
@@ -46,8 +50,9 @@ def train_model():
     # results = []
     start_time = datetime.now().strftime("%H:%M:%S")
     # lgbm_classifier = LightgbmClassifier(train_df = train_data, prediction_column = 'type', device='gpu')
+
     lgbm_classifier = LightgbmClassifier(train_df = train_data, prediction_column = 'type')
-    lgbm_classifier.tune_hyper_parameters(scoring='accuracy')
+    lgbm_classifier.tune_hyper_parameters()
     model = lgbm_classifier.train()
     end_time = datetime.now().strftime("%H:%M:%S")
     print("start time =", start_time)
@@ -56,10 +61,10 @@ def train_model():
 
     evaluate = Evaluate()
     evaluations = evaluate.evaluate_train_and_test(model, lgbm_classifier)
-    
-    print(f"model evaluations: {evaluations}")
+    evaluate.print_train_and_test_evaluation(*evaluations)
+    # print(f"model evaluations: {evaluations}")
     with open(SAVED_MODEL_EVALUATION, 'w') as file:
-        file.write(evaluations)
+        file.write(str(evaluations))
 
     lgbm_classifier.save_feature_importances(model_folder=SAVED_MODEL_FOLDER)
     lgbm_classifier.save_tree_diagram(tree_index=0, model_folder=SAVED_MODEL_FOLDER)

@@ -12,25 +12,27 @@ class Evaluate:
         print_str =  "\n".join([classification_report(y_true, y_predict), f"confusion_matrix: \n {cm}"])
         # print (print_str)
         return print_str
+        
     
     def evaluate_train_and_test(self, model, classifier):
-        print("Train eval:")
         y_predict = self.predict(model, classifier.X_train)
         train_score = round(accuracy_score(classifier.y_train, y_predict), 3)
         train_evaluations = self.evaluate_classification (classifier.y_train, y_predict)
 
-        print("Test eval:")
         y_predict = self.predict(model, classifier.X_test)
         test_score = round(accuracy_score(classifier.y_test, y_predict), 3)
         test_evaluations = self.evaluate_classification (classifier.y_test, y_predict)
 
         # return "\n".join(["\nTrain eval:",  str(train_evaluations), f'score: {train_score}',  "\nTest eval:", str(test_evaluations), f'score: {test_score}', "*" * 100, "\n"])
-        return "\n".join([
+        return train_evaluations, train_score, test_evaluations, test_score
+    
+    def print_train_and_test_evaluation(self, train_evaluations, train_score, test_evaluations, test_score):
+         print("\n".join([
             "\nTrain eval:\n {}", 
             "Train score: {}", 
             "{}", 
             "\nTest eval:\n {}", 
             "Test score: {}", 
             "\n"
-        ]).format(str(train_evaluations), train_score, "*" * 100, str(test_evaluations), test_score)
-        
+        ]).format(str(train_evaluations), train_score, "*" * 100, str(test_evaluations), test_score))
+    

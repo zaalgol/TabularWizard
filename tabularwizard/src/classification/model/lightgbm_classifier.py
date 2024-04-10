@@ -1,29 +1,50 @@
+# https://www.kaggle.com/code/mrtgocer/from-zero-to-hero-lightgbm-classifier
+
 import os
 from lightgbm import LGBMClassifier, plot_tree
 from tabularwizard.src.classification.model.base_classifier_model import BaseClassfierModel
 import matplotlib.pyplot as plt
+from skopt.space import Real, Categorical, Integer
 
 DEFAULT_PARAMS = {
-            'class_weight': [None, 'balanced'],
-            'boosting_type': ['gbdt', 'goss', 'dart'],
-            'num_leaves': list(range(30, 150)),
-            'learning_rate': [0.01,0.05, 0.1 ,0.5],
-            'subsample_for_bin': [20000,50000,100000,120000,150000],
-            'min_child_samples': [20,50,100,200,500],
-            'colsample_bytree': [0.6,0.8,1],
-            "max_depth": (5,100, 'uniform'),
-            'lambda_l1': (0.7, 5, 'log-uniform'),
-            'lambda_l2': (0.7, 5, 'log-uniform')
-        }
+    # 'class_weight': ['balanced', None],  # Keep as is, categorical.
+    # 'boosting_type': ['gbdt', 'goss', 'dart'],  # Keep as is, categorical.
+    'learning_rate': Real(0.01, 1.0, 'log-uniform'),     # Boosting learning rate
+    'n_estimators': Integer(30, 5000),                   # Number of boosted trees to fit
+    # 'n_estimators': Integer(30, 5000),                   # Number of boosted trees to fit
+    'num_leaves': Integer(2, 512),                       # Maximum tree leaves for base learners
+    'max_depth': Integer(-1, 256),                       # Maximum tree depth for base learners, <=0 means no limit
+    'min_child_samples': Integer(1, 256),                # Minimal number of data in one leaf
+    'max_bin': Integer(100, 1000),                       # Max number of bins that feature values will be bucketed
+    'subsample': Real(0.01, 1.0, 'uniform'),             # Subsample ratio of the training instance
+    'subsample_freq': Integer(0, 10),                    # Frequency of subsample, <=0 means no enable
+    'colsample_bytree': Real(0.01, 1.0, 'uniform'),      # Subsample ratio of columns when constructing each tree
+    'min_child_weight': Real(0.01, 10.0, 'uniform'),     # Minimum sum of instance weight (hessian) needed in a child (leaf)
+    'reg_lambda': Real(1e-9, 100.0, 'log-uniform'),      # L2 regularization
+    'reg_alpha': Real(1e-9, 100.0, 'log-uniform'),       # L1 regularization
+    'scale_pos_weight': Real(1.0, 500.0, 'uniform'),     # Weighting of the minority class (Only for binary classification)
+    # 'num_leaves': (3, 150, 'uniform'),  # Convert to uniform distribution, specifying as integer is implied.
+    # 'learning_rate': (0.005, 0.5, 'log-uniform'),  # Use log-uniform to explore more granularly at lower values.
+    # 'subsample_for_bin': (20000, 150000, 'uniform'),  # Convert to uniform distribution.
+    # 'min_child_samples': (20, 500, 'uniform'),  # Convert to uniform distribution.
+    # 'colsample_bytree': (0.6, 1, 'uniform'),  # Convert to uniform distribution.
+    # "max_depth": (4, 100, 'uniform'),  # Keep as uniform, but ensuring integer values are sampled.
+    # 'lambda_l1': (0.01, 120, 'log-uniform'),  # Keep as log-uniform for fine-grained exploration of regularization.
+    # 'lambda_l2': (0.01, 120, 'log-uniform')  # Keep as log-uniform for fine-grained exploration of regularization.
+}
 
 class LightgbmClassifier(BaseClassfierModel):
     def __init__(self, train_df, prediction_column, *args, split_column=None, test_size=0.3, **kwargs):
-        super().__init__(train_df, prediction_column, split_column=split_column, test_size=test_size)
-        self.estimator = LGBMClassifier(*args, **kwargs)
+        super().__init__(train_df=train_df, prediction_column=prediction_column, split_column=split_column, test_size=test_size)
+        objective = 'multiclass' if self.unique_classes > 2 else 'binary'
+        self.estimator = LGBMClassifier(objective=objective, *args, **kwargs)
 
     @property
     def default_params(self):
-        return DEFAULT_PARAMS
+        default_params = DEFAULT_PARAMS
+        if self.unique_classes > 2:
+            default_params.pop('scale_pos_weight', None)
+        return default_params
     
 
     def save_tree_diagram(self, tree_index=0, model_folder='', filename='tree_diagram.png'):

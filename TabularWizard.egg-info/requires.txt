@@ -25,3 +25,4 @@ tenacity
 threadpoolctl
 tzdata
 xgboost
+skopt

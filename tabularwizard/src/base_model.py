@@ -1,6 +1,10 @@
 from abc import abstractmethod
+import pprint
+import time
+import pandas as pd
 from sklearn.model_selection import GroupShuffleSplit
 from sklearn.model_selection import train_test_split
+from skopt.callbacks import DeadlineStopper, DeltaYStopper
 
 
 class BaseModel:
@@ -24,7 +28,18 @@ class BaseModel:
         self.X_train = self.X_train.drop([prediction_column], axis=1)
         self.X_test = self.X_test.drop([prediction_column], axis=1)
 
-        @property
-        @abstractmethod
-        def default_params(self):
-            return {}
+    @property
+    def callbacks(self):
+        time_limit_control = DeadlineStopper(total_time=60 * 90) # We impose a time limit (45 minutes]
+        return [time_limit_control]
+    
+        # TODO: make it work. corrently, it stoppes very early.
+        # overdone_control = DeltaYStopper(delta=0.0001) # We stop if the gain of the optimization becomes too small
+        # return [overdone_control, time_limit_control]
+
+    @property
+    @abstractmethod
+    def default_params(self):
+        return {}
+    
+    
