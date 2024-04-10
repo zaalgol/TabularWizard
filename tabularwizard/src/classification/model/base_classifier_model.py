@@ -13,8 +13,7 @@ class BaseClassfierModel(BaseModel):
             super().__init__(train_df, prediction_column, split_column, test_size)
 
             self.unique_classes = train_df[prediction_column].nunique()
-            smote = SMOTE(random_state=42)
-            self.X_train, self.y_train = smote.fit_resample(self.X_train, self.y_train)
+            self.check_and_apply_smote()
 
         def tune_hyper_parameters(self, params=None, scoring=None, kfold=5, n_iter=500):
             if params is None:
@@ -40,6 +39,25 @@ class BaseClassfierModel(BaseModel):
                 result = self.estimator.fit(self.X_train, self.y_train)
                 print("Best accuracy:", self.estimator.best_score_)
             return result
+        
+        def check_and_apply_smote(self):
+            # Calculate the ratio of the smallest class to the largest class
+            class_counts = np.bincount(self.y_train)
+            smallest_class = np.min(class_counts[class_counts > 0])  # Avoid counting classes with 0 instances
+            largest_class = np.max(class_counts)
+            ratio = smallest_class / largest_class
+
+            # Define a threshold below which we consider the dataset imbalanced
+            # This threshold can be adjusted based on specific needs
+            imbalance_threshold = 0.5  # Example threshold
+
+            # If the ratio is below the threshold, apply SMOTE
+            if ratio < imbalance_threshold:
+                print("Applying SMOTE to balance the dataset.")
+                smote = SMOTE(random_state=self.random_state)
+                self.X_train, self.y_train = smote.fit_resample(self.X_train, self.y_train)
+            else:
+                print("The dataset is considered balanced. Skipping SMOTE.")
         
         def save_feature_importances(self, model_folder='', filename='feature_importances.png'):
             # Default implementation, to be overridden in derived classes
