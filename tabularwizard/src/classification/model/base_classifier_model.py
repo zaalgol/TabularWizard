@@ -5,7 +5,7 @@ from skopt import BayesSearchCV
 from tabularwizard.src.base_model import BaseModel
 import matplotlib.pyplot as plt
 import numpy as np
-from imblearn.over_sampling import SMOTE
+from imblearn.over_sampling import RandomOverSampler
 
 
 class BaseClassfierModel(BaseModel):
@@ -41,10 +41,10 @@ class BaseClassfierModel(BaseModel):
             return result
         
         def check_and_apply_smote(self):
-            # Calculate the ratio of the smallest class to the largest class
-            class_counts = np.bincount(self.y_train)
-            smallest_class = np.min(class_counts[class_counts > 0])  # Avoid counting classes with 0 instances
-            largest_class = np.max(class_counts)
+            class_counts = self.y_train.value_counts()
+
+            smallest_class = class_counts.min()
+            largest_class = class_counts.max()
             ratio = smallest_class / largest_class
 
             # Define a threshold below which we consider the dataset imbalanced
@@ -53,9 +53,8 @@ class BaseClassfierModel(BaseModel):
 
             # If the ratio is below the threshold, apply SMOTE
             if ratio < imbalance_threshold:
-                print("Applying SMOTE to balance the dataset.")
-                smote = SMOTE(random_state=self.random_state)
-                self.X_train, self.y_train = smote.fit_resample(self.X_train, self.y_train)
+                random_pver_sampler = RandomOverSampler(random_state=0)
+                self.X_train, self.y_train = random_pver_sampler.fit_resample(self.X_train, self.y_train)
             else:
                 print("The dataset is considered balanced. Skipping SMOTE.")
         

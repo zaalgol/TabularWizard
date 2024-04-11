@@ -1,4 +1,5 @@
 # https://www.kaggle.com/code/mrtgocer/from-zero-to-hero-lightgbm-classifier
+# https://www.youtube.com/watch?v=AFtjWuwqpSQ
 
 import os
 from lightgbm import LGBMClassifier, plot_tree
@@ -6,10 +7,21 @@ from tabularwizard.src.classification.model.base_classifier_model import BaseCla
 import matplotlib.pyplot as plt
 from skopt.space import Real, Categorical, Integer
 
+DEFAULT_PARAMS_OLD = {
+    'class_weight': ['balanced', None],  # Keep as is, categorical.
+    'boosting_type': ['gbdt', 'dart'],  # Keep as is, categorical.
+    'num_leaves': (3, 150, 'uniform'),  # Convert to uniform distribution, specifying as integer is implied.
+    'learning_rate': (0.01, 0.1, 'log-uniform'),  # Use log-uniform to explore more granularly at lower values.
+    'subsample_for_bin': (20000, 150000, 'uniform'),  # Convert to uniform distribution.
+    'min_child_samples': (20, 500, 'uniform'),  # Convert to uniform distribution.
+    'colsample_bytree': (0.6, 1, 'uniform'),  # Convert to uniform distribution.
+    "max_depth": (5, 100, 'uniform'),  # Keep as uniform, but ensuring integer values are sampled.
+    'lambda_l1': (1e-9, 5, 'log-uniform'),  # Keep as log-uniform for fine-grained exploration of regularization.
+    'lambda_l2': (1e-9, 5, 'log-uniform')  # Keep as log-uniform for fine-grained exploration of regularization.
+}
+
 DEFAULT_PARAMS = {
-    # 'class_weight': ['balanced', None],  # Keep as is, categorical.
-    # 'boosting_type': ['gbdt', 'goss', 'dart'],  # Keep as is, categorical.
-    'learning_rate': Real(0.01, 1.0, 'log-uniform'),     # Boosting learning rate
+    'learning_rate': Real(0.01, 0.1, 'log-uniform'),     # Boosting learning rate
     'n_estimators': Integer(30, 5000),                   # Number of boosted trees to fit
     # 'n_estimators': Integer(30, 5000),                   # Number of boosted trees to fit
     'num_leaves': Integer(2, 512),                       # Maximum tree leaves for base learners
@@ -22,15 +34,6 @@ DEFAULT_PARAMS = {
     'min_child_weight': Real(0.01, 10.0, 'uniform'),     # Minimum sum of instance weight (hessian) needed in a child (leaf)
     'reg_lambda': Real(1e-9, 100.0, 'log-uniform'),      # L2 regularization
     'reg_alpha': Real(1e-9, 100.0, 'log-uniform'),       # L1 regularization
-    'scale_pos_weight': Real(1.0, 500.0, 'uniform'),     # Weighting of the minority class (Only for binary classification)
-    # 'num_leaves': (3, 150, 'uniform'),  # Convert to uniform distribution, specifying as integer is implied.
-    # 'learning_rate': (0.005, 0.5, 'log-uniform'),  # Use log-uniform to explore more granularly at lower values.
-    # 'subsample_for_bin': (20000, 150000, 'uniform'),  # Convert to uniform distribution.
-    # 'min_child_samples': (20, 500, 'uniform'),  # Convert to uniform distribution.
-    # 'colsample_bytree': (0.6, 1, 'uniform'),  # Convert to uniform distribution.
-    # "max_depth": (4, 100, 'uniform'),  # Keep as uniform, but ensuring integer values are sampled.
-    # 'lambda_l1': (0.01, 120, 'log-uniform'),  # Keep as log-uniform for fine-grained exploration of regularization.
-    # 'lambda_l2': (0.01, 120, 'log-uniform')  # Keep as log-uniform for fine-grained exploration of regularization.
 }
 
 class LightgbmClassifier(BaseClassfierModel):
@@ -41,7 +44,7 @@ class LightgbmClassifier(BaseClassfierModel):
 
     @property
     def default_params(self):
-        default_params = DEFAULT_PARAMS
+        default_params = DEFAULT_PARAMS_OLD
         if self.unique_classes > 2:
             default_params.pop('scale_pos_weight', None)
         return default_params

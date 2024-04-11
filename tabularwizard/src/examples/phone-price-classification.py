@@ -38,39 +38,34 @@ def train_model():
 
     print(train_data.head())
 
-    dataPreprocessing.describe_datafranme(train_data)
-    # print(dataPreprocessing.get_missing_values_per_coloun(train_data))
-    # show_missing(train_data)
-    # plot_all_correlation(train_data)
-    # plot_correlation_one_vs_others(train_data, 'price_range')
-    show_distribution_of_numeric_column_values(train_data,'ram')
-    plot_correlation_two_columns(train_data,'price_range', 'ram')
+    # dataPreprocessing.describe_datafranme(train_data)
+    # show_distribution_of_numeric_column_values(train_data,'ram')
+    # plot_correlation_two_columns(train_data,'price_range', 'ram')
     
 
 
     # train_data = dataPreprocessing.one_hot_encode_column(train_data, 'color')
     # train_data = train_data.set_index('id')
     print(train_data.head())
-    show_missing(df = train_data)
-    plot_corelation_between_all_columns(train_data)
-    plt.show()
+    # show_missing(df = train_data)
+    # plot_corelation_between_all_columns(train_data)
+    # plt.show()
 
 
     # results = []
 
-    # lgbm_classifier = LightgbmClassifier(train_df = train_data, prediction_column = 'price_range')
-    # lgbm_classifier.tune_hyper_parameters()
-    # model = lgbm_classifier.train()
-
-    classifier = CatboostClassifier(train_df = train_data, prediction_column = 'price_range')
-    classifier.tune_hyper_parameters()
+    classifier = LightgbmClassifier(train_df = train_data, prediction_column = 'price_range')
+    # classifier.tune_hyper_parameters()
     model = classifier.train()
+
+    # classifier = CatboostClassifier(train_df = train_data, prediction_column = 'price_range')
+    # classifier.tune_hyper_parameters()
+    # model = classifier.train()
     # pickle.dump(model, open(SAVED_MODEL_FILE, 'wb'))
 
     evaluate = Evaluate()
     evaluations = evaluate.evaluate_train_and_test(model, classifier)
-    
-    print(f"model evaluations: {evaluations}")
+    evaluate.print_train_and_test_evaluation(*evaluations)
     # with open(SAVED_MODEL_EVALUATION, 'w') as file:
     #     file.write(evaluations)
 

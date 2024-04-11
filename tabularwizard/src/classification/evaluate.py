@@ -24,9 +24,9 @@ class Evaluate:
         test_evaluations = self.evaluate_classification (classifier.y_test, y_predict)
 
         # return "\n".join(["\nTrain eval:",  str(train_evaluations), f'score: {train_score}',  "\nTest eval:", str(test_evaluations), f'score: {test_score}', "*" * 100, "\n"])
-        return train_evaluations, train_score, test_evaluations, test_score
+        return {'train_evaluations': train_evaluations, 'train_score':train_score, 'test_evaluations':test_evaluations, 'test_score': test_score}
     
-    def print_train_and_test_evaluation(self, train_evaluations, train_score, test_evaluations, test_score):
+    def print_train_and_test_evaluation(self, evaluations):
          print("\n".join([
             "\nTrain eval:\n {}", 
             "Train score: {}", 
@@ -34,5 +34,5 @@ class Evaluate:
             "\nTest eval:\n {}", 
             "Test score: {}", 
             "\n"
-        ]).format(str(train_evaluations), train_score, "*" * 100, str(test_evaluations), test_score))
+        ]).format(str(evaluations['train_evaluations']), evaluations['train_score'], "*" * 100, str(evaluations['test_evaluations']), evaluations['test_score']))
     

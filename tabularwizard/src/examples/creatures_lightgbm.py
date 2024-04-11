@@ -42,8 +42,8 @@ def train_model():
     print(dataPreprocessing.get_missing_values_per_coloun(train_data))
     print(dataPreprocessing.get_missing_values_per_coloun(test_data))
 
-    train_data = dataPreprocessing.one_hot_encode_column(train_data, 'color')
-    train_data = dataPreprocessing.map_order_column(train_data, 'type', {"Ghoul":1, "Goblin":2, "Ghost":0})
+    # train_data = dataPreprocessing.one_hot_encode_column(train_data, 'color')
+    # train_data = dataPreprocessing.map_order_column(train_data, 'type', {"Ghoul":1, "Goblin":2, "Ghost":0})
     train_data = train_data.set_index('id')
     print(train_data.head())
 
@@ -52,7 +52,7 @@ def train_model():
     # lgbm_classifier = LightgbmClassifier(train_df = train_data, prediction_column = 'type', device='gpu')
 
     lgbm_classifier = LightgbmClassifier(train_df = train_data, prediction_column = 'type')
-    lgbm_classifier.tune_hyper_parameters()
+    # lgbm_classifier.tune_hyper_parameters()
     model = lgbm_classifier.train()
     end_time = datetime.now().strftime("%H:%M:%S")
     print("start time =", start_time)
@@ -61,7 +61,7 @@ def train_model():
 
     evaluate = Evaluate()
     evaluations = evaluate.evaluate_train_and_test(model, lgbm_classifier)
-    evaluate.print_train_and_test_evaluation(*evaluations)
+    evaluate.print_train_and_test_evaluation(evaluations)
     # print(f"model evaluations: {evaluations}")
     with open(SAVED_MODEL_EVALUATION, 'w') as file:
         file.write(str(evaluations))

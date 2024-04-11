@@ -5,10 +5,17 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python Debugger: Current File",
+            "name": "creatures_lightgbm.py",
             "type": "debugpy",
             "request": "launch",
             "program": "tabularwizard\\src\\examples\\creatures_lightgbm.py",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "phone-price-classification.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "tabularwizard\\src\\examples\\phone-price-classification.py",
             "console": "integratedTerminal"
         }
     ]

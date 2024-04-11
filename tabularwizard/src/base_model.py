@@ -8,7 +8,7 @@ from skopt.callbacks import DeadlineStopper, DeltaYStopper
 
 
 class BaseModel:
-    def __init__(self, train_df, prediction_column, split_column, test_size=0.3):
+    def __init__(self, train_df, prediction_column, split_column, test_size=0.2):
         self.search = None
 
         if split_column is None:
@@ -30,7 +30,7 @@ class BaseModel:
 
     @property
     def callbacks(self):
-        time_limit_control = DeadlineStopper(total_time=60 * 90) # We impose a time limit (45 minutes]
+        time_limit_control = DeadlineStopper(total_time=60 * 45) # We impose a time limit (45 minutes]
         return [time_limit_control]
     
         # TODO: make it work. corrently, it stoppes very early.

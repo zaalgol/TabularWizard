@@ -13,6 +13,12 @@ class DataPreprocessing:
     def sanitize_column_names(self, df):
         df.columns = [col.replace(',', '').replace(':', '').replace('"', '').replace('[', '').replace(']', '').replace('{', '').replace('}', '') for col in df.columns]
         return df
+    
+    def convert_column_categircal_values_to_numerical_values(self, df, column):
+        df_copy = df.copy()
+        labels, _ = pd.factorize(df_copy[column])
+        df_copy[column] = labels
+        return df_copy
 
     # example of mapping_dict: {'high': 3, 'medium': 2, 'low': 1}
     def map_order_column(self, df, column_name, mapping_dict):
@@ -37,8 +43,6 @@ class DataPreprocessing:
     
     def one_hot_encode_all_categorical_columns(self, df):
         return pd.get_dummies(df)
-
-
 
     def one_hot_encode_column(self, dataframe, column_name):
         # Make a copy of the original DataFrame to avoid modifying it in place
