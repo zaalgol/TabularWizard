@@ -5,3 +5,4 @@ results/
 catboost_info/
 dist/**
 build/
+.vscode/

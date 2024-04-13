@@ -14,33 +14,38 @@ class Evaluate:
 
 
         # Construct results string
-        results_lines = [
-            f"Mean Absolute Error - mae: {mae}",
-            f"Mean Squared Error - mse: {mse}",
-            f"Root Mean Squared Error - rmse: {rmse}",
-            f"R2 Score: {r2}",
-            f"Root Mean Squared Logarithmic Error - rmsle: {rmsle}"
-        ]
+        results_lines = {
+            'mae': f"Mean Absolute Error - mae: {mae}",
+            'mse': f"Mean Squared Error - mse: {mse}",
+            'rmse': f"Root Mean Squared Error - rmse: {rmse}",
+            'r2': f"R2 Score: {r2}",
+            'rmsle': f"Root Mean Squared Logarithmic Error - rmsle: {rmsle}"
+        }
 
         if title is not None:
-            results_lines.insert(0, title)
+            results_lines[title]= title
 
-        results = "\n".join(results_lines)
-
-        print(results)
-
-        return results + "\n\n"
+        return results_lines
     
-    def evaluate_model(self, model, X_train, y_train, X_test, y_test):
-        y_train_predict = self.predict(model, X_train)
-        train_evaluation = self.evaluate_predictions(y_train, y_train_predict, "Train evaluation:")
+    def evaluate_train_and_test(self, model, regressor):
+        y_train_predict = self.predict(model, regressor.X_train)
+        train_evaluations = self.evaluate_predictions(regressor.y_train, y_train_predict, "Train evaluation:")
         # model["train_evaluation"] = train_evaluation
 
-        y_test_predict = self.predict(model, X_test)
-        test_evaluation = self.evaluate_predictions(y_test, y_test_predict, "Test evaluation:")
+        y_test_predict = self.predict(model, regressor.X_test)
+        test_evaluations = self.evaluate_predictions(regressor.y_test, y_test_predict, "Test evaluation:")
 
-        return train_evaluation + test_evaluation
+        return {'train_evaluations':train_evaluations, 'test_evaluations': test_evaluations}
         # model["test_evaluation"] = test_evaluation
+
+    
+    def print_train_and_test_evaluation(self, evaluations):
+         print("\n".join([
+            "\nTrain eval:\n {}", 
+            "{}", 
+            "\nTest eval:\n {}", 
+            "\n"
+        ]).format(str(evaluations['train_evaluations'].values()), "*" * 100, str(evaluations['test_evaluations'].values())))
 
 
 

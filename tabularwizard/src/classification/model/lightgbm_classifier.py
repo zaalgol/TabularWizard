@@ -16,8 +16,8 @@ DEFAULT_PARAMS_OLD = {
     'min_child_samples': (20, 500, 'uniform'),  # Convert to uniform distribution.
     'colsample_bytree': (0.6, 1, 'uniform'),  # Convert to uniform distribution.
     "max_depth": (5, 100, 'uniform'),  # Keep as uniform, but ensuring integer values are sampled.
-    'lambda_l1': (1e-9, 5, 'log-uniform'),  # Keep as log-uniform for fine-grained exploration of regularization.
-    'lambda_l2': (1e-9, 5, 'log-uniform')  # Keep as log-uniform for fine-grained exploration of regularization.
+    'lambda_l1': (1e-9, 100, 'log-uniform'),  # Keep as log-uniform for fine-grained exploration of regularization.
+    'lambda_l2': (1e-9, 100, 'log-uniform')  # Keep as log-uniform for fine-grained exploration of regularization.
 }
 
 DEFAULT_PARAMS = {
@@ -45,8 +45,8 @@ class LightgbmClassifier(BaseClassfierModel):
     @property
     def default_params(self):
         default_params = DEFAULT_PARAMS_OLD
-        if self.unique_classes > 2:
-            default_params.pop('scale_pos_weight', None)
+        # if self.unique_classes > 2:
+        #     default_params.pop('scale_pos_weight', None)
         return default_params
     
 

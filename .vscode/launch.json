@@ -17,6 +17,13 @@
             "request": "launch",
             "program": "tabularwizard\\src\\examples\\phone-price-classification.py",
             "console": "integratedTerminal"
+        },
+        {
+            "name": "temp.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "temp.py",
+            "console": "integratedTerminal"
         }
     ]
 }
