@@ -3,3 +3,4 @@ from tabularwizard.src.classification.model.lightgbm_classifier import LightgbmC
 from tabularwizard.src.regression.model.lightgbm_regerssor import LightGBMRegressor
 from tabularwizard.src.classification.evaluate import Evaluate as ClassificationEvaluate
 from tabularwizard.src.regression.evaluate import Evaluate as RegressionEvaluate
+from tabularwizard.src.classification.model.knn_classifier import KnnClassifier

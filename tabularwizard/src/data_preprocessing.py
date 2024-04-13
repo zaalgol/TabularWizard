@@ -4,8 +4,11 @@ from sklearn.utils import resample
 
 class DataPreprocessing:
     def exclude_columns(self, df, columns_to_exclude):
-        return df.drop(columns=columns_to_exclude).copy()
-    
+        # Use intersection to find the columns that exist in both the dataframe and the columns_to_exclude list
+        valid_columns_to_exclude = [col for col in columns_to_exclude if col in df.columns]
+        # Drop only the valid columns
+        return df.drop(columns=valid_columns_to_exclude).copy()
+        
     def exclude_other_columns(self, df, columns):
         columns_to_keep = [col for col in columns if col in df.columns]
         return df[columns_to_keep]
