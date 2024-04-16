@@ -12,42 +12,47 @@ from tabularwizard.src.classification.model.xgboost_classifier import XgboostCla
 from tabularwizard.src.data_preprocessing import DataPreprocessing
 from sklearn.ensemble import VotingClassifier
 from imblearn.over_sampling import SMOTE
-
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
 SAVED_MODEL_FOLDER = os.path.join('results', 'trained_models', 'classification', f"fraud_lightgbm_{timestamp}")
 os.makedirs(SAVED_MODEL_FOLDER)
 SAVED_MODEL_FILE = os.path.join(SAVED_MODEL_FOLDER, 'finalized_lgbm_model.sav')
 SAVED_MODEL_EVALUATION = os.path.join(SAVED_MODEL_FOLDER, 'model_eval')
 
 def train_model():
-    df = pd.read_csv('datasets\credit_fraud\creditcard.csv')
+   start_time = datetime.now().strftime("%H:%M:%S")
+   df = pd.read_csv('tabularwizard/datasets/credit_fraud/creditcard.csv')
 
-    print(df.shape)
-    print(df.Class.value_counts())
-    print((len(df.loc[df.Class==1])) / (len(df.loc[df.Class == 0])))
+   print(df.shape)
+   print(df.Class.value_counts())
+   print((len(df.loc[df.Class==1])) / (len(df.loc[df.Class == 0])))
 
-    dataPreprocessing  = DataPreprocessing()
+   dataPreprocessing  = DataPreprocessing()
 
     # underampling_df = dataPreprocessing.majority_minority_class(df, "Class", 1, 0)
     # print(underampling_df.Class.value_counts())
-
-    classifier = LightgbmClassifier(train_df = df, prediction_column = 'Class')
-    # sampling_df = dataPreprocessing.majority_minority_class(pd.concat([classifier.X_train, classifier.y_train], axis=1), "Class", 1, 0)
+   
+   classifier = LightgbmClassifier(train_df = df, prediction_column = 'Class')
+   # df = dataPreprocessing.majority_minority_class(pd.concat([classifier.X_train, classifier.y_train], axis=1), "Class", 1, 0)
+   
     # classifier.y_train = sampling_df.Class
     # classifier.X_train = sampling_df.drop('Class', axis=1)
     # print(sampling_df.Class.value_counts())
-    dataPreprocessing.oversampling_minority_classifier(classifier, 1, 0)
-    classifier.tune_hyper_parameters()
-    model = classifier.train()
-    pickle.dump(model, open(SAVED_MODEL_FILE, 'wb'))
+   #  dataPreprocessing.oversampling_minority_classifier(classifier, 1, 0)
+   classifier.tune_hyper_parameters()
+   model = classifier.train()
+   pickle.dump(model, open(SAVED_MODEL_FILE, 'wb'))
 
-    evaluate = Evaluate()
-    evaluations = evaluate.evaluate_train_and_test(model, classifier)
+   evaluate = Evaluate()
+   evaluations = evaluate.evaluate_train_and_test(model, classifier)
     
-    print(f"model evaluations: {evaluations}")
+   print(f"model evaluations: {evaluate.format_train_and_test_evaluation(evaluations)}")
+   end_time = datetime.now().strftime("%H:%M:%S")
+   print("start time =", start_time)
+   print("end time =", end_time)
 
-    with open(SAVED_MODEL_EVALUATION, 'w') as file:
-        file.write(evaluations)
+   #  with open(SAVED_MODEL_EVALUATION, 'w') as file:
+   #      file.write(evaluations)
 
 def use_traned_model():
     pass

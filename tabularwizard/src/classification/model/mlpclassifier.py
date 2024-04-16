@@ -1,26 +1,40 @@
 import os
+import numpy as np
 from sklearn.model_selection import GridSearchCV, KFold
 from sklearn.neural_network import MLPClassifier
 from tabularwizard.src.classification.model.base_classifier_model import BaseClassfierModel
 import matplotlib.pyplot as plt
+from skopt.space import Real, Categorical, Integer
 
 DEFAULT_PARAMS = {
-    'hidden_layer_sizes': [(5,), (10,), (10, 10), (5, 10), (10, 10, 10)],
+    # 'hidden_layer_sizes': [(100,), (100, 100), (5, 10), (10, 10, 10)],
+    'hidden_layer_sizes': [ (100,), (20, 10) ],
     'activation': ['identity', 'logistic', 'tanh', 'relu'],
     'solver': ['lbfgs', 'sgd', 'adam'],
-    'alpha': (0.0001, 10, 'log-uniform'),
+    'alpha': [0.0001, 0.05, 0.1, 0.5, 1, 2],
     'learning_rate': ['constant', 'invscaling', 'adaptive'],
-    'learning_rate_init': [0.01, 0.05, 0.1, 0.5],
-    'max_iter': [100, 200, 300, 400, 500],
+    'max_iter': [200],
+    # 'learning_rate_init': (0.001, 0.01, 'log-uniform'),
+    # 'max_iter': [100, 200, 300, 400, 500],
 }
 
 class MLPNetClassifier(BaseClassfierModel):
     def __init__(self, train_df, prediction_column, *args, split_column=None, test_size=0.3, **kwargs):
         super().__init__(train_df, prediction_column, split_column=split_column, test_size=test_size)
         self.estimator = MLPClassifier(*args, **kwargs)
+
+    def train(self):
+            if self.search: # with hyperparameter tuining
+                result = self.search.fit(self.X_train, self.y_train)
+                print("Best Cross-Validation parameters:", self.search.best_params_)
+                print("Best Cross-Validation score:", self.search.best_score_)
+            else:
+                result = self.estimator.fit(self.X_train, self.y_train)
+                # print("Best accuracy:", self.estimator.best_score_)
+            return result
         
 
-    def tune_hyper_parameters(self, params=None, scoring='r2', kfold=10):
+    def tune_hyper_parameters(self, params=None, scoring='accuracy', kfold=10):
             if params is None:
                 params = self.default_params
             Kfold = KFold(n_splits=kfold)  

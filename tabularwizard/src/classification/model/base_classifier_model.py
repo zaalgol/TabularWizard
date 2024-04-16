@@ -13,9 +13,9 @@ class BaseClassfierModel(BaseModel):
             super().__init__(train_df, prediction_column, split_column, test_size)
 
             self.unique_classes = train_df[prediction_column].nunique()
-            # self.check_and_apply_smote()
+            self.check_and_apply_smote()
 
-        def tune_hyper_parameters(self, params=None, scoring=None, kfold=5, n_iter=2000):
+        def tune_hyper_parameters(self, params=None, scoring=None, kfold=5, n_iter=150):
             if params is None:
                 params = self.default_params
             Kfold = KFold(n_splits=kfold)  

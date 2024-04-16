@@ -17,19 +17,10 @@ from sklearn.ensemble import VotingClassifier
 
 
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-SAVED_MODEL_FOLDER = os.path.join('results', 'trained_models', 'classification', f"creatures_lightgbm_{timestamp}")
-os.makedirs(SAVED_MODEL_FOLDER)
-LGBM_SAVED_MODEL_FILE = os.path.join(SAVED_MODEL_FOLDER, 'finalized_lgbm_model.sav')
-XGB_SAVED_MODEL_FILE = os.path.join(SAVED_MODEL_FOLDER, 'finalized_xbm_model.sav')
-RF_SAVED_MODEL_FILE = os.path.join(SAVED_MODEL_FOLDER, 'finalized_rf_model.sav')
-LGBM_SAVED_MODEL_FILE2 = os.path.join(SAVED_MODEL_FOLDER, 'finalized_lgbm_model2.sav')
-XGB_SAVED_MODEL_FILE2 = os.path.join(SAVED_MODEL_FOLDER, 'finalized_xbm_model2.sav')
-RF_SAVED_MODEL_FILE2 = os.path.join(SAVED_MODEL_FOLDER, 'finalized_rf_model2.sav')
-SAVED_MODEL_EVALUATION = os.path.join(SAVED_MODEL_FOLDER, 'model_eval')
-train_path = "tabularwizard/datasets/ghouls-goblins-and-ghosts-boo/train.csv"
-test_path = "tabularwizard/datasets/ghouls-goblins-and-ghosts-boo/test.csv"
 
-dataPreprocessing  = DataPreprocessing()
+iris_path = 'tabularwizard/datasets/titanic.csv'
+
+data_preprocessing  = DataPreprocessing()
 
 pd.set_option("display.max_rows",None)
 pd.set_option("display.max_columns",None)
@@ -40,59 +31,54 @@ def use_traned_model():
 
 def train_model():
     tune = False
-    train_data = pd.read_csv(train_path)
-    test_data = pd.read_csv(test_path)
+    start_time = datetime.now().strftime("%H:%M:%S")
+    prediction_column = 'species'
+    train_data = pd.read_csv(iris_path)
 
     print(train_data.head())
-    print(test_data.head())
 
-    dataPreprocessing.describe_datafranme(train_data)
-    print(dataPreprocessing.get_missing_values_per_coloun(train_data))
-    print(dataPreprocessing.get_missing_values_per_coloun(test_data))
-    train_data = dataPreprocessing.set_not_numeric_as_categorial(train_data)
 
-    train_data = dataPreprocessing.one_hot_encode_column(train_data, 'color')
-    train_data = dataPreprocessing.map_order_column(train_data, 'type', {"Ghoul":1, "Goblin":2, "Ghost":0})
-    train_data = train_data.set_index('id')
+    data_preprocessing.describe_datafranme(train_data)
+    print(data_preprocessing.get_missing_values_per_coloun(train_data))
+
+    # train_data = dataPreprocessing.one_hot_encode_column(train_data, 'color')
+    train_data = data_preprocessing.map_order_column(train_data, 'species', {'Iris-setosa':0, 'Iris-versicolor':1, 'Iris-virginica':2})
+    # train_data = train_data.set_index('id')
     print(train_data.head())
 
-    lgbm_classifier = LightgbmClassifier(train_df = train_data.copy(), prediction_column = 'type')
+    mlp_classifier = MLPNetClassifier(train_df = train_data.copy(), prediction_column = prediction_column)
     if tune:
-        lgbm_classifier.tune_hyper_parameters(scoring='accuracy')
-    lgbm_model = lgbm_classifier.train()
-    pickle.dump(lgbm_model, open(LGBM_SAVED_MODEL_FILE, 'wb'))
-
-    xgb_classifier = XgboostClassifier(train_df = train_data.copy(), prediction_column = 'type')
-    if tune:
-        xgb_classifier.tune_hyper_parameters(scoring='accuracy')
-    xgb_model = xgb_classifier.train()
-    pickle.dump(xgb_model, open(XGB_SAVED_MODEL_FILE, 'wb'))
-
-    
-    knn_classifier = KnnClassifier(train_df = train_data.copy(), prediction_column = 'type')
-    if tune:
-        knn_classifier.tune_hyper_parameters(scoring='accuracy')
-    knn_model = knn_classifier.train()
+        mlp_classifier.tune_hyper_parameters(scoring='accuracy')
+    mlp_model = mlp_classifier.train()
 
 
-    rf_classifier = RandomForestClassifierCustom(train_df = train_data.copy(), prediction_column = 'type')
+    rf_classifier = RandomForestClassifierCustom(train_df = train_data.copy(), prediction_column = prediction_column)
     if tune:
         rf_classifier.tune_hyper_parameters(scoring='accuracy')
     rf_model = rf_classifier.train()
-    pickle.dump(rf_model, open(RF_SAVED_MODEL_FILE, 'wb'))
 
-    
 
-    lr_classifier = LRegression(train_df = train_data.copy(), prediction_column = 'type')
+    lgbm_classifier = LightgbmClassifier(train_df = train_data.copy(), prediction_column = prediction_column)
+    if tune:
+        lgbm_classifier.tune_hyper_parameters(scoring='accuracy')
+    lgbm_model = lgbm_classifier.train()
+
+
+    xgb_classifier = XgboostClassifier(train_df = train_data.copy(), prediction_column = prediction_column)
+    if tune:
+        xgb_classifier.tune_hyper_parameters(scoring='accuracy')
+    xgb_model = xgb_classifier.train()
+ 
+
+    lr_classifier = LRegression(train_df = train_data.copy(), prediction_column = prediction_column)
     if tune:
         lr_classifier.tune_hyper_parameters(scoring='accuracy')
     lr_model = lr_classifier.train()
 
-    
-    mlp_classifier = MLPNetClassifier(train_df = train_data.copy(), prediction_column = 'type')
+    knn_classifier = KnnClassifier(train_df = train_data.copy(), prediction_column = prediction_column)
     if tune:
-        mlp_classifier.tune_hyper_parameters(scoring='accuracy')
-    mlp_model = mlp_classifier.train()
+        lr_classifier.tune_hyper_parameters(scoring='accuracy')
+    knn_model = knn_classifier.train()
 
     # estimators = [ ('lgbm_model', lgbm_model), ('xgb_model', xgb_model), ('rf_model', rf_model), \
     #                ('mlp_model', mlp_model)]
@@ -144,7 +130,7 @@ def train_model():
     #     file.write(lgbm_evaluations)
 
     # for i in range(10):
-    #     lgbm_classifier = LightgbmClassifier(train_df = train_data, prediction_column = 'type')
+    #     lgbm_classifier = LightgbmClassifier(train_df = train_data, prediction_column = prediction_column)
     #     lgbm_classifier.tune_hyper_parameters(scoring='accuracy')
     #     result, best_params, cv_score, test_score = lgbm_classifier.train()
     #     # Storing the results of this iteration

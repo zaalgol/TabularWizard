@@ -1,14 +1,15 @@
 from sklearn.neighbors import KNeighborsClassifier
 from tabularwizard.src.classification.model.base_classifier_model import BaseClassfierModel
 from sklearn.preprocessing import StandardScaler
+from skopt.space import Real, Categorical, Integer
 
 
 DEFAULT_PARAMS = {
-    'n_neighbors': list(range(1, 31)),
-    'weights': ['uniform', 'distance'],
-    'algorithm': ['auto', 'ball_tree', 'kd_tree', 'brute'],
-    'leaf_size': list(range(20, 51)),
-    # 'p': [1, 2]
+    'n_neighbors': Integer(1, 30),  # Number of neighbors
+    'weights': Categorical(['uniform', 'distance']),  # Weight type
+    'algorithm': Categorical(['auto', 'ball_tree', 'kd_tree', 'brute']),  # Algorithm used to compute the nearest neighbors
+    'leaf_size': Integer(20, 50),  # Leaf size passed to BallTree or KDTree
+     #'p': Categorical([1, 2])  # Power parameter for the Minkowski metric
 }
 
 class KnnClassifier(BaseClassfierModel):

@@ -64,7 +64,7 @@ def train_model():
 
     evaluate = Evaluate()
     evaluations = evaluate.evaluate_train_and_test(trained_lRegression, lRegression)
-    evaluate.print_train_and_test_evaluation(evaluations)
+    evaluate.format_train_and_test_evaluation(evaluations)
     results['lRegression'] = evaluations
 
     knnClassifier = KnnClassifier(train_df = train_data, prediction_column = 'price_range')
@@ -72,7 +72,7 @@ def train_model():
     trained_knnClassifier = knnClassifier.train()
     evaluate = Evaluate()
     evaluations = evaluate.evaluate_train_and_test(trained_knnClassifier, knnClassifier)
-    evaluate.print_train_and_test_evaluation(evaluations)
+    evaluate.format_train_and_test_evaluation(evaluations)
     results['knnClassifier'] = evaluations
 
 
@@ -84,7 +84,7 @@ def train_model():
 
     evaluate = Evaluate()
     evaluations = evaluate.evaluate_train_and_test(trained_lgbm, lgbm_classifier)
-    evaluate.print_train_and_test_evaluation(evaluations)
+    evaluate.format_train_and_test_evaluation(evaluations)
     results['lightbm'] = evaluations
     end_time = datetime.now().strftime("%H:%M:%S")
     print("start time =", start_time)

@@ -3,6 +3,7 @@
 
 import os
 from lightgbm import LGBMClassifier, plot_tree
+from src.data_preprocessing import DataPreprocessing
 from tabularwizard.src.classification.model.base_classifier_model import BaseClassfierModel
 import matplotlib.pyplot as plt
 from skopt.space import Real, Categorical, Integer
@@ -40,6 +41,8 @@ class LightgbmClassifier(BaseClassfierModel):
     def __init__(self, train_df, prediction_column, *args, split_column=None, test_size=0.3, **kwargs):
         super().__init__(train_df=train_df, prediction_column=prediction_column, split_column=split_column, test_size=test_size)
         objective = 'multiclass' if self.unique_classes > 2 else 'binary'
+        self.X_train = DataPreprocessing().set_not_numeric_as_categorial(self.X_train)
+        self.X_test = DataPreprocessing().set_not_numeric_as_categorial(self.X_test)
         self.estimator = LGBMClassifier(objective=objective, *args, **kwargs)
 
     @property

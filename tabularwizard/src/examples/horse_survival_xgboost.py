@@ -48,7 +48,7 @@ def use_traned_model():
     loaded_model = pickle.load(open(SAVED_MODEL_FILE, 'rb'))
     evaluate = Evaluate()
     y_predict = evaluate.predict(loaded_model, X_data)
-    print(evaluate.evaluate_classification(df['outcome'], y_predict))
+    print(evaluate.get_confution_matrix(df['outcome'], y_predict))
 
 def perprocess_data(df):
     data_preprocessing = DataPreprocessing()

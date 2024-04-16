@@ -2,16 +2,17 @@ from sklearn.ensemble import RandomForestClassifier
 from tabularwizard.src.classification.model.base_classifier_model import BaseClassfierModel
 import matplotlib.pyplot as plt
 from sklearn.tree import plot_tree
+from skopt.space import Real, Categorical, Integer
 import os
 
 DEFAULT_PARAMS = {
-    'n_estimators': list(range(50, 300, 50)),
-    'max_depth': list(range(3, 10)) + [None],
-    'min_samples_split': [2, 5, 10],
-    'min_samples_leaf': [1, 2, 4],
-    'bootstrap': [True, False],
-    'criterion': ['gini', 'entropy'],
-    'max_features': [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]
+    'n_estimators': Integer(50, 300),  # Number of trees in the forest
+    'max_depth': Categorical([3, 4, 5, 6, 7, 8, 9, None]),  # Maximum depth of each tree
+    'min_samples_split': Categorical([2, 5, 10]),  # Minimum number of samples required to split an internal node
+    'min_samples_leaf': Categorical([1, 2, 4]),  # Minimum number of samples required to be at a leaf node
+    'bootstrap': Categorical([True, False]),  # Method for sampling data points (with or without replacement)
+    'criterion': Categorical(['gini', 'entropy']),  # The function to measure the quality of a split
+    'max_features': Integer(1, 19)  # The number of features to consider when looking for the best split
 }
 
 class RandomForestClassifierCustom(BaseClassfierModel):
@@ -23,12 +24,12 @@ class RandomForestClassifierCustom(BaseClassfierModel):
     def default_params(self):
         return DEFAULT_PARAMS
 
-    def train(self):
-        result = self.search.fit(self.X_train, self.y_train.values.ravel())  # using values.ravel() to get a 1-D array
-        print("Best parameters:", self.search.best_params_)
-        print("Best accuracy:", self.search.best_score_)
+    # def train(self):
+    #     result = self.search.fit(self.X_train, self.y_train.values.ravel())  # using values.ravel() to get a 1-D array
+    #     print("Best parameters:", self.search.best_params_)
+    #     print("Best accuracy:", self.search.best_score_)
 
-        return result
+    #     return result
     
     def save_tree_diagram(self, tree_index=0, model_folder='', filename='random_forest_tree_diagram.png', dpi=300):
         plt.figure(figsize=(20, 10))

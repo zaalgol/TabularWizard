@@ -2,26 +2,29 @@ import os
 from xgboost import XGBClassifier, plot_tree
 import matplotlib.pyplot as plt
 from tabularwizard.src.classification.model.base_classifier_model import BaseClassfierModel
-
+from skopt.space import Real, Categorical, Integer
+from tabularwizard.src.data_preprocessing import DataPreprocessing 
 
 DEFAULT_PARAMS = {
-    'learning_rate': [0.01, 0.05, 0.1, 0.5],
-    'n_estimators': list(range(50, 300, 50)),
-    'max_depth': list(range(3, 10)),
-    'subsample': [0.6, 0.7, 0.8, 0.9, 1.0],
-    'colsample_bytree': [0.6, 0.7, 0.8, 0.9, 1.0],
-    'colsample_bylevel': [0.6, 0.7, 0.8, 0.9, 1.0],
-    'min_child_weight': list(range(1, 10)),
-    'gamma': [i/10.0 for i in range(0, 5)],
-    'reg_alpha': [1e-5, 1e-2, 0.1, 1, 100],
-    'reg_lambda': [1e-5, 1e-2, 0.1, 1, 100],
-    'scale_pos_weight': [1, 10, 25, 50, 75, 99, 100, 1000]
+'learning_rate': Real(0.01, 0.5, prior='log-uniform'),  # Log-uniform is more suitable for learning rates
+    'n_estimators': Integer(50, 300),  # Number of trees, integer within a range
+    'max_depth': Integer(3, 10),  # Maximum depth of each tree
+    'subsample': Real(0.6, 1.0, prior='uniform'),  # Subsample ratio of the training instances
+    'colsample_bytree': Real(0.6, 1.0, prior='uniform'),  # Subsample ratio of columns when constructing each tree
+    'colsample_bylevel': Real(0.6, 1.0, prior='uniform'),  # Subsample ratio of columns for each level
+    'min_child_weight': Integer(1, 10),  # Minimum sum of instance weight needed in a child
+    'gamma': Real(0.0, 0.5, prior='uniform'),  # Minimum loss reduction required to make a further partition on a leaf node
+    'reg_alpha': Real(1e-5, 100, prior='log-uniform'),  # L1 regularization term on weights
+    'reg_lambda': Real(1e-5, 100, prior='log-uniform'),  # L2 regularization term on weights
+    'scale_pos_weight': Real(1, 1000, prior='log-uniform')  # Balancing of positive and negative weights
 }
 
 class XgboostClassifier(BaseClassfierModel):
     def __init__(self, train_df, prediction_column, *args, split_column=None, test_size=0.3, **kwargs):
         super().__init__(train_df, prediction_column, split_column=split_column, test_size=test_size)
-        self.estimator = XGBClassifier(*args, **kwargs)
+        self.X_train = DataPreprocessing().set_not_numeric_as_categorial(self.X_train)
+        self.estimator = XGBClassifier(enable_categorical=True, *args, **kwargs)
+
 
     @property
     def default_params(self):

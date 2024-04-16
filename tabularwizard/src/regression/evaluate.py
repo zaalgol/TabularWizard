@@ -39,13 +39,13 @@ class Evaluate:
         # model["test_evaluation"] = test_evaluation
 
     
-    def print_train_and_test_evaluation(self, evaluations):
-         print("\n".join([
+    def format_train_and_test_evaluation(self, evaluations):
+         return "\n".join([
             "\nTrain eval:\n {}", 
             "{}", 
             "\nTest eval:\n {}", 
             "\n"
-        ]).format(str(evaluations['train_evaluations'].values()), "*" * 100, str(evaluations['test_evaluations'].values())))
+        ]).format(str(evaluations['train_evaluations'].values()), "*" * 100, str(evaluations['test_evaluations'].values()))
 
 
 

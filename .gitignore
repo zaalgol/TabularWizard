@@ -6,3 +6,4 @@ catboost_info/
 dist/**
 build/
 .vscode/
+.vscode/launch.json

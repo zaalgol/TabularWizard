@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.utils import resample
@@ -12,10 +13,32 @@ class DataPreprocessing:
     def exclude_other_columns(self, df, columns):
         columns_to_keep = [col for col in columns if col in df.columns]
         return df[columns_to_keep]
+    
+    def exclude_non_numeric_columns_with_large_unique_values(self, df, k):
+    
+        cols_to_drop = [col for col in df.select_dtypes(exclude=[np.number]).columns
+                    if df[col].nunique() > k]
+
+        # Drop these columns from the DataFrame
+        df.drop(columns=cols_to_drop, inplace=True)
+
+        return df
 
     def sanitize_column_names(self, df):
-        df.columns = [col.replace(',', '').replace(':', '').replace('"', '').replace('[', '').replace(']', '').replace('{', '').replace('}', '') for col in df.columns]
-        return df
+        new_df = df.copy()
+        new_df.columns = [col.replace(',', '').replace(':', '').replace('"', '').replace('[', '').replace(']', '').replace('{', '').replace('}', '') for col in df.columns]
+        return new_df
+    
+    def sanitize_cells(self, df):
+        new_df = df.copy()
+        for col in new_df.columns:
+            if new_df[col].dtype == 'object' or new_df[col].dtype =='category':  # Assuming we only want to sanitize string-type columns
+                new_df[col] = new_df[col].apply(lambda x: x.replace(',', '').replace(':', '').replace('"', '').replace('[', '').replace(']', '').replace('{', '').replace('}', '') if isinstance(x, str) else x)
+        return new_df
+    
+    def sanitize_dataframe(self, df):
+        new_df = self.sanitize_column_names(df)
+        return self.sanitize_cells(new_df)
     
     def convert_column_categircal_values_to_numerical_values(self, df, column):
         df_copy = df.copy()
@@ -60,11 +83,19 @@ class DataPreprocessing:
         
         return encoded_df
     
+    def set_not_numeric_as_categorial(self, df):
+        df_copy = df.copy()
+        cat_features  =  self.get_all_categorical_columns_names(df_copy)
+        for feature in cat_features:
+            df_copy[feature] = df_copy[feature].astype('category')
+        return df_copy
+    
     def get_all_categorical_columns_names(self, df):
-        return [f for f in df.columns if df.dtypes[f] == 'object']
+        return [f for f in df.columns if df.dtypes[f] == 'object' or df.dtypes[f] == 'category']
     
     def get_numeric_columns(self, df):
-        return [f for f in df.columns if df.dtypes[f] != 'object']
+        return [f for f in df.columns if df.dtypes[f] != 'object'or df.dtypes[f] == 'category']
+    
     
     def fill_missing_numeric_cells(self, df, median_stratay=True):
         new_df = df.copy()
@@ -76,7 +107,7 @@ class DataPreprocessing:
     
     def fill_missing_not_numeric_cells(self, df):
         new_df = df.copy()
-        categorical_columns = df.select_dtypes(include=['object']).columns
+        categorical_columns = df.select_dtypes(include=['object', 'category']).columns
     
         # Filling missing values in categorical columns with their respective modes.
         for column in categorical_columns:
@@ -137,6 +168,8 @@ class DataPreprocessing:
                                                          classifier.y_train.name, minority_class, majority_class)
         classifier.y_train = sampling_df.Class
         classifier.X_train = sampling_df.drop('Class', axis=1)
+
+
 
 
 

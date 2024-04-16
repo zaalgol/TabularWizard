@@ -30,7 +30,7 @@ class BaseModel:
 
     @property
     def callbacks(self):
-        time_limit_control = DeadlineStopper(total_time=60 * 45) # We impose a time limit (45 minutes]
+        time_limit_control = DeadlineStopper(total_time=60 * 180) # We impose a time limit (45 minutes]
         return [time_limit_control]
     
         # TODO: make it work. corrently, it stoppes very early.

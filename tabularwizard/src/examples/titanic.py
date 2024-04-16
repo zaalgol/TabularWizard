@@ -23,7 +23,7 @@ def perprocess_data(df):
     data_preprocessing  = DataPreprocessing()
     df = df.set_index('PassengerId')
     df = df.drop('Ticket', axis=1)
-    df['Name'] = df['Name'].str.extract('(\w+)\.')
+    # df['Name'] = df['Name'].str.extract('(\w+)\.')
     data_preprocessing.fill_missing_not_numeric_cells(df)
     data_preprocessing.fill_missing_numeric_cells(df)
 
