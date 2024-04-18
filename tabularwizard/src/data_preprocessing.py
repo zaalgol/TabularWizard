@@ -169,6 +169,45 @@ class DataPreprocessing:
         classifier.y_train = sampling_df.Class
         classifier.X_train = sampling_df.drop('Class', axis=1)
 
+    def create_encoding_rules(self, df, threshold=0.05):
+        df_copy = df.copy()
+        encoding_rules = {}
+        categorical_cols = df_copy.select_dtypes(include=['object', 'category']).columns
+
+        for col in categorical_cols:
+            value_counts = df_copy[col].value_counts(normalize=True)
+            frequent_categories = value_counts[value_counts >= threshold].index.tolist()
+            encoding_rules[col] = frequent_categories
+        
+        return encoding_rules
+
+    def apply_encoding_rules(self, df, encoding_rules):
+        df_encoded = df.copy()
+        
+        for col, rules in encoding_rules.items():
+            # Apply 'Other' category to infrequent values
+            df_encoded[col] = df[col].apply(lambda x: x if x in rules else 'Other')
+
+            # Create a new DataFrame with the correct columns for one-hot encoding
+            encoded_features = pd.get_dummies(df_encoded[col], prefix=col)
+            # Ensure all columns that were created during training are present, initialized to False
+            all_categories = {f"{col}_{category}": False for category in rules + ['Other']}
+            for c in encoded_features.columns:
+                all_categories[c] = encoded_features[c].astype(bool)
+            encoded_df = pd.DataFrame(all_categories, index=df_encoded.index)
+
+            # Drop the original column and append the new encoded columns
+            df_encoded.drop(columns=[col], inplace=True)
+            df_encoded = pd.concat([df_encoded, encoded_df], axis=1)
+
+        # Correcting the data types
+        for col in df_encoded.columns:
+            if 'category' in col:
+                df_encoded[col] = df_encoded[col].astype(bool)
+
+        return df_encoded
+
+
 
 
 

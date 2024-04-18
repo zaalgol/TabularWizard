@@ -122,12 +122,12 @@ def train_model():
     print("*" * 200 + f" lr_evaluations: {evaluate.format_train_and_test_evaluation(lr_evaluations)}")
     print("*" * 200 + f" knn_evaluations: {evaluate.format_train_and_test_evaluation(knn_evaluations)}")
 
-    print("#" * 200 + f" lgbm_evaluations score: {lgbm_evaluations['test_score']}")
-    print("#" * 200 + f" xgb_evaluations score: {xgb_evaluations['test_score']}")
-    print("#" * 200 + f" rf_evaluations score: {rf_evaluations['test_score']}")
-    print("#" * 200 + f" mlp_evaluations score: {mlp_evaluations['test_score']}")
-    print("#" * 200 + f" lr_evaluations score: {lr_evaluations['test_score']}")
-    print("#" * 200 + f" knn_evaluations score: {knn_evaluations['test_score']}")
+    print("#" * 200 + f" lgbm_evaluations score: {lgbm_evaluations['test_metrics']}")
+    print("#" * 200 + f" xgb_evaluations score: {xgb_evaluations['test_metrics']}")
+    print("#" * 200 + f" rf_evaluations score: {rf_evaluations['test_metrics']}")
+    print("#" * 200 + f" mlp_evaluations score: {mlp_evaluations['test_metrics']}")
+    print("#" * 200 + f" lr_evaluations score: {lr_evaluations['test_metrics']}")
+    print("#" * 200 + f" knn_evaluations score: {knn_evaluations['test_metrics']}")
     print("#" * 200 + f" ensemble_hard_evaluations score: {ensemble_hard_evaluation}")
     print("#" * 200 + f" : tune= {tune}")
     # print("#" * 200 + f" ensemble_soft_evaluations score: {ensemble_soft_evaluation}")
@@ -146,12 +146,12 @@ def train_model():
     # for i in range(10):
     #     lgbm_classifier = LightgbmClassifier(train_df = train_data, prediction_column = 'type')
     #     lgbm_classifier.tune_hyper_parameters(scoring='accuracy')
-    #     result, best_params, cv_score, test_score = lgbm_classifier.train()
+    #     result, best_params, cv_score, test_metrics = lgbm_classifier.train()
     #     # Storing the results of this iteration
     #     iteration_results = {
     #         "best_params": best_params,
     #         "cv_score": cv_score,
-    #         "test_score": test_score
+    #         "test_metrics": test_metrics
     #     }
     #     results.append(iteration_results)
 
@@ -162,7 +162,7 @@ def train_model():
     #     print(f"Iteration {idx}:")
     #     print(f"Best Params: {res['best_params']}")
     #     print(f"CV Score: {res['cv_score']}")
-    #     print(f"Test Score: {res['test_score']}")
+    #     print(f"Test Score: {res['test_metrics']}")
     #     print("-" * 50)
 
 

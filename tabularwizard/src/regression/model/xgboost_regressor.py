@@ -1,14 +1,7 @@
-import matplotlib
-import pandas as pd
-import numpy as np
-import xgboost as xgb
-from sklearn.model_selection import train_test_split
-from skopt import BayesSearchCV
-from xgboost import XGBRegressor, plot_tree
+from xgboost import XGBRegressor
 import matplotlib.pyplot as plt
 from xgboost import plot_importance
-from sklearn.model_selection import KFold
-from tabularwizard.src.regression.base_regressor_model import BaseRegressorrModel
+from tabularwizard.src.regression.base_regressor_model import BaseRegressorModel
 
 
 DEFAULT_PARAMS = {
@@ -24,7 +17,7 @@ DEFAULT_PARAMS = {
             'min_child_weight': (1, 10)
         }
 
-class XgboostRegressor(BaseRegressorrModel):
+class XgboostRegressor(BaseRegressorModel):
     def __init__(self, train_df, prediction_column, *args, split_column=None, test_size=0.3, **kwargs):
         super().__init__(train_df, prediction_column, split_column=split_column, test_size=test_size)
         self.estimator = XGBRegressor(*args, **kwargs)

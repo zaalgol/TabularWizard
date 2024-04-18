@@ -3,17 +3,18 @@ from skopt import BayesSearchCV
 from tabularwizard.src.base_model import BaseModel
 
 
-class BaseRegressorrModel(BaseModel):
-        def __init__(self, *args, **kwargs):
-            super().__init__(*args, **kwargs)
+class BaseRegressorModel(BaseModel):
+        def __init__(self, scoring='RMSE', *args, **kwargs):
+            super().__init__(scoring, *args, **kwargs)
         
-        def tune_hyper_parameters(self, params=None, *args, **kwargs):
+        def tune_hyper_parameters(self, params=None, *args,**kwargs):
             if params is None:
                 params = self.default_params
             # Kfold = KFold(n_splits=kfold)  
             
             self.search = BayesSearchCV(estimator=self.estimator,
                                         search_spaces=params,
+                                        scoring=self.scoring,
                                         *args, **kwargs)
             
         def train(self):

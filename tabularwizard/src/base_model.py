@@ -8,8 +8,15 @@ from skopt.callbacks import DeadlineStopper, DeltaYStopper
 
 
 class BaseModel:
-    def __init__(self, train_df, prediction_column, split_column, test_size=0.2):
+    def __init__(self, train_df, prediction_column, scoring, split_column, test_size=0.2, already_splited_data=None):
         self.search = None
+        self.scoring = scoring
+        self.prediction_column = prediction_column
+
+        if already_splited_data:
+            self.X_train, self.X_test, self.y_train, self.y_test = \
+                already_splited_data['X_train'], already_splited_data['X_test'], already_splited_data['y_train'], already_splited_data['y_test']
+            return
 
         if split_column is None:
             self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(train_df,

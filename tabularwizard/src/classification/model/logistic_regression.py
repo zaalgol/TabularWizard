@@ -49,8 +49,8 @@ DEFAULT_PARAMS = [
 
 
 class LRegression(BaseClassfierModel):
-    def __init__(self, train_df, prediction_column, *args, split_column=None, test_size=0.3, **kwargs):
-        super().__init__(train_df, prediction_column, split_column=split_column, test_size=test_size)
+    def __init__(self, train_df, prediction_column, split_column=None, test_size=0.3, already_splited_data=None, *args, **kwargs):
+        super().__init__(train_df, prediction_column, split_column=split_column, test_size=test_size, already_splited_data=already_splited_data)
         sc=StandardScaler()
         self.X_train=sc.fit_transform(self.X_train)
         self.X_test=sc.transform(self.X_test)

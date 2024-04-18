@@ -2,7 +2,7 @@
 
 from lightgbm import LGBMRegressor
 from sklearn.model_selection import train_test_split
-from tabularwizard.src.regression.base_regressor_model import BaseRegressorrModel
+from tabularwizard.src.regression.base_regressor_model import BaseRegressorModel
 
 DEFAULT_PARAMS = {
     'learning_rate': (0.01, 0.3, 'log-uniform'),  # typical range from learning rate
@@ -18,7 +18,7 @@ DEFAULT_PARAMS = {
     'n_estimators': (50, 1000),  # number of boosted trees to fit
 }
 
-class LightGBMRegressor(BaseRegressorrModel):
+class LightGBMRegressor(BaseRegressorModel):
     def __init__(self, train_df, prediction_column, *args, split_column=None, test_size=0.3, **kwargs):
         super().__init__(train_df, prediction_column, split_column=split_column, test_size=test_size)
         self.estimator = LGBMRegressor(*args, **kwargs)

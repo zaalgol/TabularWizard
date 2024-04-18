@@ -20,8 +20,8 @@ DEFAULT_PARAMS = {
 }
 
 class XgboostClassifier(BaseClassfierModel):
-    def __init__(self, train_df, prediction_column, *args, split_column=None, test_size=0.3, **kwargs):
-        super().__init__(train_df, prediction_column, split_column=split_column, test_size=test_size)
+    def __init__(self, train_df, prediction_column, split_column=None, test_size=0.3, already_splited_data=None, *args, **kwargs):
+        super().__init__(train_df, prediction_column, split_column=split_column, test_size=test_size, already_splited_data=already_splited_data)
         self.X_train = DataPreprocessing().set_not_numeric_as_categorial(self.X_train)
         self.estimator = XGBClassifier(enable_categorical=True, *args, **kwargs)
 

@@ -9,7 +9,11 @@ df = pd.read_csv(train_path)
 df['type']=df['type'].astype("category").cat.codes
 df['color']=df['color'].astype("category")
 X_train, X_test, y_train, y_test = train_test_split(df, df['type'], test_size=0.2, random_state=42)
-result = xgb.fit(X_train, y_train)
+model = xgb.fit(X_train, y_train)
+y_pred = model.predict(X_test)
+y_scores = model.predict_proba(X_test)
+t=0
+
 
 
 

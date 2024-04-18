@@ -12,20 +12,21 @@ class Evaluate:
         mae = mean_absolute_error(y_true, y_pred)
         rmsle = np.sqrt(mean_squared_log_error(y_true, y_pred))
 
+        return {'mse':mse, 'rmse':rmse,'r2':r2, 'mae':mae, 'rmsle':rmsle }
 
         # Construct results string
-        results_lines = {
-            'mae': f"Mean Absolute Error - mae: {mae}",
-            'mse': f"Mean Squared Error - mse: {mse}",
-            'rmse': f"Root Mean Squared Error - rmse: {rmse}",
-            'r2': f"R2 Score: {r2}",
-            'rmsle': f"Root Mean Squared Logarithmic Error - rmsle: {rmsle}"
-        }
+        # results_lines = {
+        #     'mae': f"Mean Absolute Error - mae: {mae}",
+        #     'mse': f"Mean Squared Error - mse: {mse}",
+        #     'rmse': f"Root Mean Squared Error - rmse: {rmse}",
+        #     'r2': f"R2 Score: {r2}",
+        #     'rmsle': f"Root Mean Squared Logarithmic Error - rmsle: {rmsle}"
+        # }
 
-        if title is not None:
-            results_lines[title]= title
+        # if title is not None:
+        #     results_lines[title]= title
 
-        return results_lines
+        # return results_lines
     
     def evaluate_train_and_test(self, model, regressor):
         y_train_predict = self.predict(model, regressor.X_train)
