@@ -6,12 +6,18 @@ from sklearn.model_selection import GroupShuffleSplit
 from sklearn.model_selection import train_test_split
 from skopt.callbacks import DeadlineStopper, DeltaYStopper
 
+from src.data_preprocessing import DataPreprocessing
+
 
 class BaseModel:
-    def __init__(self, train_df, prediction_column, scoring, split_column, test_size=0.2, already_splited_data=None):
+    def __init__(self, train_df, prediction_column, scoring, split_column, 
+                 create_encoding_rules=False, apply_encoding_rules=False, test_size=0.2, already_splited_data=None):
         self.search = None
         self.scoring = scoring
         self.prediction_column = prediction_column
+        self.data_preprocessing = DataPreprocessing()
+        self.encoding_rules = None
+
 
         if already_splited_data:
             self.X_train, self.X_test, self.y_train, self.y_test = \
@@ -34,6 +40,13 @@ class BaseModel:
 
         self.X_train = self.X_train.drop([prediction_column], axis=1)
         self.X_test = self.X_test.drop([prediction_column], axis=1)
+
+        if create_encoding_rules:
+            self.encoding_rules = self.data_preprocessing.create_encoding_rules(self.X_train)
+        if apply_encoding_rules:
+            self.X_train = self.data_preprocessing.apply_encoding_rules(self.X_train, self.encoding_rules)
+            self.X_test = self.data_preprocessing.apply_encoding_rules(self.X_test, self.encoding_rules)
+
 
     @property
     def callbacks(self):

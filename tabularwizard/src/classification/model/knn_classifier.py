@@ -13,8 +13,9 @@ DEFAULT_PARAMS = {
 }
 
 class KnnClassifier(BaseClassfierModel):
-    def __init__(self, train_df, prediction_column, split_column=None, test_size=0.3, already_splited_data=None, *args, **kwargs):
-        super().__init__(train_df, prediction_column, split_column=split_column, test_size=test_size, already_splited_data=already_splited_data)
+    def __init__(self, train_df, prediction_column, split_column=None, create_encoding_rules=False, apply_encoding_rules=False, test_size=0.3, already_splited_data=None, *args, **kwargs):
+        super().__init__(train_df, prediction_column, split_column=split_column, test_size=test_size, 
+                         create_encoding_rules=create_encoding_rules, apply_encoding_rules=apply_encoding_rules, already_splited_data=already_splited_data)
         self.unique_classes = train_df[prediction_column].nunique()
         self.check_and_apply_smote()
 

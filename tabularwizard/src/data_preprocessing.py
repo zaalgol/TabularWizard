@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import MinMaxScaler, LabelEncoder
 from sklearn.utils import resample
 
 class DataPreprocessing:
@@ -45,6 +45,14 @@ class DataPreprocessing:
         labels, _ = pd.factorize(df_copy[column])
         df_copy[column] = labels
         return df_copy
+    
+    def transfer_column(self, df, column):
+        df_copy = df.copy()
+        le = LabelEncoder()
+        transformed_column = le.fit_transform(df[column])
+        df_copy[column]=transformed_column
+        return df_copy
+
 
     # example of mapping_dict: {'high': 3, 'medium': 2, 'low': 1}
     def map_order_column(self, df, column_name, mapping_dict):

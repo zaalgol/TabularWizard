@@ -9,8 +9,9 @@ from imblearn.over_sampling import RandomOverSampler
 
 
 class BaseClassfierModel(BaseModel):
-        def __init__(self, train_df, prediction_column, split_column=None, test_size=None, scoring='accuracy', *args,**kwargs):
-            super().__init__(train_df, prediction_column, scoring, split_column, test_size, *args, **kwargs)
+        def __init__(self, train_df, prediction_column, split_column=None, test_size=0.2, scoring='accuracy', create_encoding_rules=False, apply_encoding_rules=False, *args, **kwargs):
+            super().__init__(train_df, prediction_column, scoring, split_column, 
+                             create_encoding_rules=create_encoding_rules, apply_encoding_rules=apply_encoding_rules, test_size=test_size, *args, **kwargs)
 
             self.unique_classes = train_df[prediction_column].nunique()
            
