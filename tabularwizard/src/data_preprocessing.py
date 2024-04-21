@@ -128,7 +128,7 @@ class DataPreprocessing:
         return [f for f in df.columns if df.dtypes[f] != 'object'or df.dtypes[f] == 'category']
     
     
-    def fill_missing_numeric_cells(self, df, median_stratay=True):
+    def fill_missing_numeric_cells(self, df, median_stratay=False):
         new_df = df.copy()
         if median_stratay:
             new_df.fillna(df.median(numeric_only=True).round(1), inplace=True)

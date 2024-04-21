@@ -46,7 +46,6 @@ class Evaluate:
         y_predict = model.predict(classifier.X_test)
         y_probability = model.predict_proba(classifier.X_test)
         test_metrics = self.calculate_metrics(classifier.y_test, y_predict, y_probability)
-        # test_score =  self.get_accurecy_score(classifier.y_test, y_predict)
         test_confution_matrix = self.get_confution_matrix (classifier.y_test, y_predict)
         test_confution_matrix_str = "\n".join([classification_report(classifier.y_test, y_predict), f"confusion_matrix: \n {test_confution_matrix}"])
 

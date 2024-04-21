@@ -1,7 +1,8 @@
 from xgboost import XGBRegressor
 import matplotlib.pyplot as plt
 from xgboost import plot_importance
-from tabularwizard.src.regression.base_regressor_model import BaseRegressorModel
+from src.data_preprocessing import DataPreprocessing
+from src.regression.model.base_regressor_model import BaseRegressorModel
 
 
 DEFAULT_PARAMS = {
@@ -18,9 +19,16 @@ DEFAULT_PARAMS = {
         }
 
 class XgboostRegressor(BaseRegressorModel):
-    def __init__(self, train_df, prediction_column, *args, split_column=None, test_size=0.3, **kwargs):
-        super().__init__(train_df, prediction_column, split_column=split_column, test_size=test_size)
-        self.estimator = XGBRegressor(*args, **kwargs)
+    def __init__(self, train_df, prediction_column, split_column=None,
+                 create_encoding_rules=False, apply_encoding_rules=False,
+                 test_size=0.3, already_splitted_data=None,  *args, **kwargs):
+        
+        super().__init__(train_df, prediction_column, split_column=split_column, test_size=test_size,
+                         create_encoding_rules=create_encoding_rules, apply_encoding_rules=apply_encoding_rules,
+                         already_splitted_data=already_splitted_data)
+        
+        self.X_train = DataPreprocessing().set_not_numeric_as_categorial(self.X_train)
+        self.estimator = XGBRegressor(enable_categorical=True, *args, **kwargs)
 
     @property
     def default_params(self):

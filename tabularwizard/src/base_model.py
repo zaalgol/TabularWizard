@@ -11,7 +11,8 @@ from src.data_preprocessing import DataPreprocessing
 
 class BaseModel:
     def __init__(self, train_df, prediction_column, scoring, split_column, 
-                 create_encoding_rules=False, apply_encoding_rules=False, create_transformations=False, apply_transformations=False, test_size=0.2, already_splited_data=None):
+                 create_encoding_rules=False, apply_encoding_rules=False, create_transformations=False, apply_transformations=False, test_size=0.2,
+                 already_splitted_data=None):
         self.search = None
         self.scoring = scoring
         self.prediction_column = prediction_column
@@ -19,9 +20,9 @@ class BaseModel:
         self.encoding_rules = None
 
 
-        if already_splited_data:
+        if already_splitted_data:
             self.X_train, self.X_test, self.y_train, self.y_test = \
-                already_splited_data['X_train'], already_splited_data['X_test'], already_splited_data['y_train'], already_splited_data['y_test']
+                already_splitted_data['X_train'], already_splitted_data['X_test'], already_splitted_data['y_train'], already_splitted_data['y_test']
             return
 
         if split_column is None:

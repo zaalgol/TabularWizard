@@ -26,20 +26,20 @@ class Ensemble(BaseClassfierModel):
                     create_encoding_rules=create_encoding_rules, apply_encoding_rules=apply_encoding_rules, create_transformations=create_transformations, apply_transformations=apply_transformations)
         self.classifiers = {}
         self.temp = {}
-        self.already_splited_data = {'X_train': self.X_train, 'X_test': self.X_test, 'y_train': self.y_train, 'y_test':self.y_test}
+        self.already_splitted_data = {'X_train': self.X_train, 'X_test': self.X_test, 'y_train': self.y_train, 'y_test':self.y_test}
         self.evaluate = Evaluate()
 
     def create_models(self, df):
-        self.classifiers['svr_classifier'] = {'model':SvmClassifier(train_df = df.copy(), prediction_column = self.prediction_column, already_splited_data=self.already_splited_data)}
-        self.classifiers['cat_classifier'] = {'model':CatboostClassifier(train_df = df.copy(), prediction_column = self.prediction_column, already_splited_data=self.already_splited_data)}
-        self.classifiers['lgbm_classifier'] = {'model':LightgbmClassifier(train_df = df.copy(), prediction_column = self.prediction_column, already_splited_data=self.already_splited_data)}
-        self.classifiers['knn_classifier'] = {'model':KnnClassifier(train_df = df.copy(), prediction_column = self.prediction_column, already_splited_data=self.already_splited_data)}
-        self.classifiers['LRegression'] = {'model':LRegression(train_df = df.copy(), prediction_column = self.prediction_column, already_splited_data=self.already_splited_data)}
-        self.classifiers['mlp_classifier'] = {'model':MLPNetClassifier(train_df = df.copy(), prediction_column = self.prediction_column, already_splited_data=self.already_splited_data)}
-        self.classifiers['rf_classifier'] = {'model':RandomForestClassifierCustom(train_df = df.copy(), prediction_column = self.prediction_column, already_splited_data=self.already_splited_data)}
-        self.classifiers['nb_classifier'] = {'model':NaiveBayesClassifier(train_df = df.copy(), prediction_column = self.prediction_column, already_splited_data=self.already_splited_data)}
+        # self.classifiers['svr_classifier'] = {'model':SvmClassifier(train_df = df.copy(), prediction_column = self.prediction_column, already_splitted_data=self.already_splitted_data)}
+        self.classifiers['cat_classifier'] = {'model':CatboostClassifier(train_df = df.copy(), prediction_column = self.prediction_column, already_splitted_data=self.already_splitted_data)}
+        self.classifiers['lgbm_classifier'] = {'model':LightgbmClassifier(train_df = df.copy(), prediction_column = self.prediction_column, already_splitted_data=self.already_splitted_data)}
+        self.classifiers['knn_classifier'] = {'model':KnnClassifier(train_df = df.copy(), prediction_column = self.prediction_column, already_splitted_data=self.already_splitted_data)}
+        self.classifiers['LRegression'] = {'model':LRegression(train_df = df.copy(), prediction_column = self.prediction_column, already_splitted_data=self.already_splitted_data)}
+        self.classifiers['mlp_classifier'] = {'model':MLPNetClassifier(train_df = df.copy(), prediction_column = self.prediction_column, already_splitted_data=self.already_splitted_data)}
+        self.classifiers['rf_classifier'] = {'model':RandomForestClassifierCustom(train_df = df.copy(), prediction_column = self.prediction_column, already_splitted_data=self.already_splitted_data)}
+        self.classifiers['nb_classifier'] = {'model':NaiveBayesClassifier(train_df = df.copy(), prediction_column = self.prediction_column, already_splitted_data=self.already_splitted_data)}
         if df[self.prediction_column].dtype not in ['category', 'object']:
-            self.classifiers['xgb_classifier'] = {'model':XgboostClassifier(train_df = df.copy(), prediction_column = self.prediction_column, already_splited_data=self.already_splited_data)}
+            self.classifiers['xgb_classifier'] = {'model':XgboostClassifier(train_df = df.copy(), prediction_column = self.prediction_column, already_splitted_data=self.already_splitted_data)}
 
         
     def tune_hyper_parameters(self):
@@ -53,7 +53,8 @@ class Ensemble(BaseClassfierModel):
     def evaluate_all_models(self):
         for classifier_value in self.classifiers.values():
             classifier_value['evaluations'] = self.evaluate.evaluate_train_and_test(classifier_value['trained_model'], classifier_value['model'])
-        self.classifiers= dict(sorted(self.classifiers.items(), key=lambda item: item[1]['evaluations']['test_metrics'][self.scoring], reverse=True))
+        self.classifiers= dict(sorted(self.classifiers.items(), key=lambda item:
+            item[1]['evaluations']['test_metrics'][self.scoring], reverse=self.scoring != 'loss')) # for loss metrics, lower is better, so we will sort in ascending order
 
 
     def retrain_top_models(self, top_n_best_models=3):
@@ -67,7 +68,7 @@ class Ensemble(BaseClassfierModel):
             t=0
 
     def create_voting_classifier(self, top_n_best_models=3):
-        self.retrain_top_models(top_n_best_models)
+        # self.retrain_top_models(top_n_best_models)
         model_list = [(name, info['model'].estimator) for name, info in islice(self.classifiers.items(), top_n_best_models)]
         self.voting_classifier = VotingClassifier(estimators=model_list, voting='soft')
 
@@ -86,9 +87,9 @@ class Ensemble(BaseClassfierModel):
 
 
 if __name__ == "__main__":
-    target_column = 'Survived'
-    # # train_path = "tabularwizard/datasets/phone-price-classification/train.csv"
-    train_path = "tabularwizard/datasets/titanic.csv"
+    target_column = 'price_range'
+    train_path = "tabularwizard/datasets/phone-price-classification/train.csv"
+    # train_path = "tabularwizard/datasets/titanic.csv"
     # train_path = "tabularwizard/datasets/ghouls-goblins-and-ghosts-boo/train.csv"
     train_data = pd.read_csv(train_path)
     train_data_capy = train_data.copy()

@@ -25,9 +25,10 @@ DEFAULT_PARAMS = {
 
 class CatboostClassifier(BaseClassfierModel):
     def __init__(self, train_df, prediction_column, split_column=None, test_size=0.3, 
-                 create_encoding_rules=False, apply_encoding_rules=False, create_transformations=False, apply_transformations=False, already_splited_data=None, verbose=False, *args, **kwargs):
+                 create_encoding_rules=False, apply_encoding_rules=False, already_splitted_data=None, verbose=False, *args, **kwargs):
         super().__init__(train_df, prediction_column, split_column=split_column, test_size=test_size,
-                          create_encoding_rules=create_encoding_rules, apply_encoding_rules=apply_encoding_rules, create_transformations=create_transformations, apply_transformations=apply_transformations, already_splited_data=already_splited_data)
+                          create_encoding_rules=create_encoding_rules, apply_encoding_rules=apply_encoding_rules,
+                          already_splitted_data=already_splitted_data)
         self.estimator = CatBoostClassifier(task_type = 'GPU', devices='0', verbose=verbose, *args, **kwargs)
 
     @property

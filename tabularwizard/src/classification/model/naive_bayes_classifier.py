@@ -8,9 +8,9 @@ DEFAULT_PARAMS = {
 }
 
 class NaiveBayesClassifier(BaseClassfierModel):
-    def __init__(self, train_df, prediction_column, split_column=None, create_encoding_rules=False, apply_encoding_rules=False, create_transformations=False, apply_transformations=False, test_size=0.3, already_splited_data=None, *args, **kwargs):
+    def __init__(self, train_df, prediction_column, split_column=None, create_encoding_rules=False, apply_encoding_rules=False, create_transformations=False, apply_transformations=False, test_size=0.3, already_splitted_data=None, *args, **kwargs):
         super().__init__(train_df, prediction_column, split_column=split_column, test_size=test_size, 
-                         create_encoding_rules=create_encoding_rules, apply_encoding_rules=apply_encoding_rules, create_transformations=create_transformations, apply_transformations=apply_transformations, already_splited_data=already_splited_data)
+                         create_encoding_rules=create_encoding_rules, apply_encoding_rules=apply_encoding_rules, create_transformations=create_transformations, apply_transformations=apply_transformations, already_splitted_data=already_splitted_data)
         self.unique_classes = train_df[prediction_column].nunique()
 
         self.estimator = GaussianNB(*args, **kwargs)

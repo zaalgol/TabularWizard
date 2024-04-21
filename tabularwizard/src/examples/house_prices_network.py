@@ -7,7 +7,7 @@ from tabularwizard.src.data_preprocessing import DataPreprocessing
 import matplotlib.pyplot as plt
 from datetime import datetime
 
-from tabularwizard.src.regression.model.mlrpregressor import Mlrpegressor #, automatic_nn
+from src.regression.model.mlrpregressor_pipeline import Mlrpegressor #, automatic_nn
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 SAVED_MODEL_FOLDER = os.path.join('results', 'trained_models', 'regression', f"mlrpregressor_regression_{timestamp}")
 os.makedirs(SAVED_MODEL_FOLDER)

@@ -7,21 +7,20 @@ import matplotlib.pyplot as plt
 from skopt.space import Real, Categorical, Integer
 
 DEFAULT_PARAMS = {
-    # 'hidden_layer_sizes': [(100,), (100, 100), (5, 10), (10, 10, 10)],
+    # 'hidden_layer_sizes': [(100,), (50, 50), (100, 50, 25)],
     'hidden_layer_sizes': [ (100,), (20, 10) ],
-    'activation': ['identity', 'logistic', 'tanh', 'relu'],
-    'solver': ['lbfgs', 'sgd', 'adam'],
+    'activation': ['relu', 'tanh', 'logistic'],
+    'solver': ['adam', 'sgd', 'lbfgs'],
     'alpha': [0.0001, 0.05, 0.1, 0.5, 1, 2, 3, 4],
+    'max_iter': [200, 300, 500],
+    'learning_rate_init': [0.001, 0.01, 0.05],
     'learning_rate': ['constant', 'invscaling', 'adaptive'],
-    'max_iter': [200],
-    # 'learning_rate_init': (0.001, 0.01, 'log-uniform'),
-    # 'max_iter': [100, 200, 300, 400, 500],
 }
 
 class MLPNetClassifier(BaseClassfierModel):
-    def __init__(self, train_df, prediction_column, split_column=None, create_encoding_rules=False, apply_encoding_rules=False, create_transformations=False, apply_transformations=False, test_size=0.3, already_splited_data=None, *args, **kwargs):
+    def __init__(self, train_df, prediction_column, split_column=None, create_encoding_rules=False, apply_encoding_rules=False, create_transformations=False, apply_transformations=False, test_size=0.3, already_splitted_data=None, *args, **kwargs):
         super().__init__(train_df, prediction_column, split_column=split_column, test_size=test_size,  
-                         create_encoding_rules=create_encoding_rules, apply_encoding_rules=apply_encoding_rules, create_transformations=create_transformations, apply_transformations=apply_transformations, already_splited_data=already_splited_data)
+                         create_encoding_rules=create_encoding_rules, apply_encoding_rules=apply_encoding_rules, create_transformations=create_transformations, apply_transformations=apply_transformations, already_splitted_data=already_splitted_data)
         self.estimator = MLPClassifier(*args, **kwargs)
 
     def train(self):

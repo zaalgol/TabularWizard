@@ -18,7 +18,7 @@ class BaseClassfierModel(BaseModel):
            
             self.check_and_apply_smote()
 
-        def tune_hyper_parameters(self, params=None, kfold=5, n_iter=150):
+        def tune_hyper_parameters(self, params=None, kfold=5, n_iter=50):
             if params is None:
                 params = self.default_params
             Kfold = KFold(n_splits=kfold)  
@@ -39,7 +39,7 @@ class BaseClassfierModel(BaseModel):
                 print("Best Cross-Validation parameters:", self.search.best_params_)
                 print("Best Cross-Validation score:", self.search.best_score_)
             else: # without hyperparameter tuining
-                result = self.estimator.fit(self.X_train, self.y_train)
+                return self.estimator.fit(self.X_train, self.y_train)
             return result
         
         def check_and_apply_smote(self):
