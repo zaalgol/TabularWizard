@@ -37,7 +37,16 @@ DEFAULT_PARAMS = [
     },
     {
         'solver': Categorical(['saga']),  # Solver that supports l1, l2, elasticnet, or None
-        'penalty': Categorical(['l1', 'l2', 'elasticnet', None]),
+        'penalty': Categorical(['l1', 'l2', None]),
+        'class_weight': Categorical(['balanced', None]),
+        'C': Real(0.0001, 10, prior='log-uniform'),
+        'fit_intercept': Categorical([True, False]),
+        'max_iter': Integer(100, 1000),
+        'tol': Real(1e-6, 1e-2, prior='log-uniform')  # Only relevant for 'elasticnet'
+    },
+    {
+        'solver': Categorical(['saga']),  # Solver that supports l1, l2, elasticnet, or None
+        'penalty': Categorical(['elasticnet']),
         'class_weight': Categorical(['balanced', None]),
         'C': Real(0.0001, 10, prior='log-uniform'),
         'fit_intercept': Categorical([True, False]),
@@ -49,11 +58,11 @@ DEFAULT_PARAMS = [
 
 
 class LRegression(BaseClassfierModel):
-    def __init__(self, train_df, prediction_column, split_column=None, create_encoding_rules=False, apply_encoding_rules=False, test_size=0.3, already_splited_data=None, *args, **kwargs):
-        super().__init__(train_df, prediction_column, split_column=split_column, create_encoding_rules=create_encoding_rules, apply_encoding_rules=apply_encoding_rules, test_size=test_size, already_splited_data=already_splited_data)
-        sc=StandardScaler()
-        self.X_train=sc.fit_transform(self.X_train)
-        self.X_test=sc.transform(self.X_test)
+    def __init__(self, train_df, prediction_column, split_column=None, create_encoding_rules=False, apply_encoding_rules=False, create_transformations=False, apply_transformations=False, test_size=0.3, already_splited_data=None, *args, **kwargs):
+        super().__init__(train_df, prediction_column, split_column=split_column, create_encoding_rules=create_encoding_rules, apply_encoding_rules=apply_encoding_rules, create_transformations=create_transformations, apply_transformations=apply_transformations, test_size=test_size, already_splited_data=already_splited_data)
+        # sc=StandardScaler()
+        # self.X_train=sc.fit_transform(self.X_train)
+        # self.X_test=sc.transform(self.X_test)
         self.estimator = LogisticRegression(*args, **kwargs)
 
 

@@ -11,7 +11,7 @@ from src.data_preprocessing import DataPreprocessing
 
 class BaseModel:
     def __init__(self, train_df, prediction_column, scoring, split_column, 
-                 create_encoding_rules=False, apply_encoding_rules=False, test_size=0.2, already_splited_data=None):
+                 create_encoding_rules=False, apply_encoding_rules=False, create_transformations=False, apply_transformations=False, test_size=0.2, already_splited_data=None):
         self.search = None
         self.scoring = scoring
         self.prediction_column = prediction_column
@@ -47,10 +47,17 @@ class BaseModel:
             self.X_train = self.data_preprocessing.apply_encoding_rules(self.X_train, self.encoding_rules)
             self.X_test = self.data_preprocessing.apply_encoding_rules(self.X_test, self.encoding_rules)
 
+        if create_transformations:
+            numeric_columns = self.data_preprocessing.get_numeric_columns(self.X_train)
+            self.transformations = self.data_preprocessing.create_transformed_numeric_column_details(self.X_train, numeric_columns)
+        if apply_transformations:
+            self.X_train = self.data_preprocessing.transformed_numeric_column_details(self.X_train, self.transformations)
+            self.X_test = self.data_preprocessing.transformed_numeric_column_details(self.X_test, self.transformations)
+
 
     @property
     def callbacks(self):
-        time_limit_control = DeadlineStopper(total_time=60 * 180) # We impose a time limit (45 minutes]
+        time_limit_control = DeadlineStopper(total_time=60 * 45) # We impose a time limit (45 minutes]
         return [time_limit_control]
     
         # TODO: make it work. corrently, it stoppes very early.

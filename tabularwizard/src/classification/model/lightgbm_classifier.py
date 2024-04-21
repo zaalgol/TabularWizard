@@ -38,7 +38,7 @@ DEFAULT_PARAMS = {
 }
 
 class LightgbmClassifier(BaseClassfierModel):
-    def __init__(self, train_df, prediction_column, split_column=None, create_encoding_rules=False, apply_encoding_rules=False, test_size=0.3, already_splited_data=None, *args, **kwargs):
+    def __init__(self, train_df, prediction_column, split_column=None, create_encoding_rules=False, apply_encoding_rules=False, create_transformations=False, apply_transformations=False, test_size=0.3, already_splited_data=None, *args, **kwargs):
         super().__init__(train_df=train_df, prediction_column=prediction_column, split_column=split_column, create_encoding_rules=create_encoding_rules, 
                          apply_encoding_rules=apply_encoding_rules, test_size=test_size, already_splited_data=already_splited_data, *args, **kwargs)
         objective = 'multiclass' if self.unique_classes > 2 else 'binary'

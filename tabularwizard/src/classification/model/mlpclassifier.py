@@ -11,7 +11,7 @@ DEFAULT_PARAMS = {
     'hidden_layer_sizes': [ (100,), (20, 10) ],
     'activation': ['identity', 'logistic', 'tanh', 'relu'],
     'solver': ['lbfgs', 'sgd', 'adam'],
-    'alpha': [0.0001, 0.05, 0.1, 0.5, 1, 2],
+    'alpha': [0.0001, 0.05, 0.1, 0.5, 1, 2, 3, 4],
     'learning_rate': ['constant', 'invscaling', 'adaptive'],
     'max_iter': [200],
     # 'learning_rate_init': (0.001, 0.01, 'log-uniform'),
@@ -19,9 +19,9 @@ DEFAULT_PARAMS = {
 }
 
 class MLPNetClassifier(BaseClassfierModel):
-    def __init__(self, train_df, prediction_column, split_column=None, create_encoding_rules=False, apply_encoding_rules=False, test_size=0.3, already_splited_data=None, *args, **kwargs):
+    def __init__(self, train_df, prediction_column, split_column=None, create_encoding_rules=False, apply_encoding_rules=False, create_transformations=False, apply_transformations=False, test_size=0.3, already_splited_data=None, *args, **kwargs):
         super().__init__(train_df, prediction_column, split_column=split_column, test_size=test_size,  
-                         create_encoding_rules=create_encoding_rules, apply_encoding_rules=apply_encoding_rules, already_splited_data=already_splited_data)
+                         create_encoding_rules=create_encoding_rules, apply_encoding_rules=apply_encoding_rules, create_transformations=create_transformations, apply_transformations=apply_transformations, already_splited_data=already_splited_data)
         self.estimator = MLPClassifier(*args, **kwargs)
 
     def train(self):
@@ -35,7 +35,7 @@ class MLPNetClassifier(BaseClassfierModel):
             return result
         
 
-    def tune_hyper_parameters(self, params=None, scoring='accuracy', kfold=10):
+    def tune_hyper_parameters(self, params=None, scoring='accuracy', kfold=10, n_iter=150):
             if params is None:
                 params = self.default_params
             Kfold = KFold(n_splits=kfold)  
@@ -43,6 +43,7 @@ class MLPNetClassifier(BaseClassfierModel):
             self.search = GridSearchCV(estimator=self.estimator,
                                         param_grid=params,
                                         scoring=scoring,
+                                        # n_iter=n_iter,
                                         n_jobs=1, 
                                         cv=Kfold,
                                         verbose=0)

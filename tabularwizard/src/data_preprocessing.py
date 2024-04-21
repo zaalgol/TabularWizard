@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from sklearn.preprocessing import MinMaxScaler, LabelEncoder
+from sklearn.preprocessing import MinMaxScaler, LabelEncoder, StandardScaler
 from sklearn.utils import resample
 
 class DataPreprocessing:
@@ -52,7 +52,30 @@ class DataPreprocessing:
         transformed_column = le.fit_transform(df[column])
         df_copy[column]=transformed_column
         return df_copy
+    
+    def create_transformed_numeric_column_details(self, df, numeric_columns):
+        df_copy = df.copy()
+        transformed_column_details = {}
 
+        for column in numeric_columns:
+        # Initialize and fit the scaler
+            scaler = StandardScaler()
+            scaler.fit(df_copy[[column]])
+            transformed_column_details[column] = {'mean': scaler.mean_[0], 'scale': scaler.scale_[0]}
+
+        return transformed_column_details
+    
+    def transformed_numeric_column_details(self, df, transformed_column_details):
+        df_copy = df.copy()
+        for column, details in transformed_column_details.items():
+            # Retrieve the scaler document for the column
+
+            # Recreate the scaling transformation manually
+            mean = details['mean']
+            scale = details['scale']
+            df_copy[column] = (df_copy[column] - mean) / scale
+        
+        return df_copy
 
     # example of mapping_dict: {'high': 3, 'medium': 2, 'low': 1}
     def map_order_column(self, df, column_name, mapping_dict):
