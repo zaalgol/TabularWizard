@@ -20,10 +20,10 @@ DEFAULT_PARAMS = {
 }
 
 class LightGBMRegressor(BaseRegressorModel):
-    def __init__(self, train_df, prediction_column, split_column=None, create_encoding_rules=False, apply_encoding_rules=False,
+    def __init__(self, train_df, target_column, split_column=None, create_encoding_rules=False, apply_encoding_rules=False,
                  test_size=0.3, already_splitted_data=None, *args, **kwargs):
         
-        super().__init__(train_df=train_df, prediction_column=prediction_column, split_column=split_column, create_encoding_rules=create_encoding_rules, 
+        super().__init__(train_df=train_df, target_column=target_column, split_column=split_column, create_encoding_rules=create_encoding_rules, 
                          apply_encoding_rules=apply_encoding_rules, test_size=test_size, already_splitted_data=already_splitted_data, *args, **kwargs)
         
         self.X_train = DataPreprocessing().set_not_numeric_as_categorial(self.X_train)

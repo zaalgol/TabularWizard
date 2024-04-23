@@ -23,7 +23,7 @@ def train_model():
     df = pd.read_csv(dataset_Path)
     df = perprocess_data(df)
 
-    lgbm_classifier = LightgbmClassifier(train_df = df, prediction_column = 'outcome')
+    lgbm_classifier = LightgbmClassifier(train_df = df, target_column = 'outcome')
     lgbm_classifier.tune_hyper_parameters(scoring='accuracy')
     model = lgbm_classifier.train()
     pickle.dump(model, open(SAVED_MODEL_FILE, 'wb'))

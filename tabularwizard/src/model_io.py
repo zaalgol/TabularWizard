@@ -11,8 +11,8 @@ def load_model(path):
     return joblib.load(path)
 
 
-def predict_with_saved_model( model, df, prediction_column):
-    df = df.drop ([prediction_column], axis=1)
+def predict_with_saved_model( model, df, target_column):
+    df = df.drop ([target_column], axis=1)
     df = df.select_dtypes (include=['number']).copy ()
     predictions = model.predict(df)
     return predictions

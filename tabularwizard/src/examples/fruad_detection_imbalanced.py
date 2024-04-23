@@ -32,7 +32,7 @@ def train_model():
     # underampling_df = dataPreprocessing.majority_minority_class(df, "Class", 1, 0)
     # print(underampling_df.Class.value_counts())
    
-   classifier = LightgbmClassifier(train_df = df, prediction_column = 'Class')
+   classifier = LightgbmClassifier(train_df = df, target_column = 'Class')
    # df = dataPreprocessing.majority_minority_class(pd.concat([classifier.X_train, classifier.y_train], axis=1), "Class", 1, 0)
    
     # classifier.y_train = sampling_df.Class

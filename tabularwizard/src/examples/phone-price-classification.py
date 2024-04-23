@@ -58,7 +58,7 @@ def train_model():
    
     start_time = datetime.now().strftime("%H:%M:%S")
 
-    lRegression = LRegression(train_df = train_data, prediction_column = 'price_range')
+    lRegression = LRegression(train_df = train_data, target_column = 'price_range')
     lRegression.tune_hyper_parameters()
     trained_lRegression = lRegression.train()
 
@@ -67,7 +67,7 @@ def train_model():
     evaluate.format_train_and_test_evaluation(evaluations)
     results['lRegression'] = evaluations
 
-    knnClassifier = KnnClassifier(train_df = train_data, prediction_column = 'price_range')
+    knnClassifier = KnnClassifier(train_df = train_data, target_column = 'price_range')
     knnClassifier.tune_hyper_parameters()
     trained_knnClassifier = knnClassifier.train()
     evaluate = Evaluate()
@@ -77,7 +77,7 @@ def train_model():
 
 
 
-    lgbm_classifier = LightgbmClassifier(train_df = train_data, prediction_column = 'price_range')
+    lgbm_classifier = LightgbmClassifier(train_df = train_data, target_column = 'price_range')
     lgbm_classifier.tune_hyper_parameters()
     trained_lgbm = lgbm_classifier.train()
     # pickle.dump(model, open(SAVED_MODEL_FILE, 'wb'))

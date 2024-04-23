@@ -21,7 +21,7 @@ def train_model():
     df = pd.read_csv(train_data_path)
     print(df)
     df = perprocess_data(df)
-    lightgbm_classifier = LightGBMRegressor(train_df = df, prediction_column = 'SalePrice')
+    lightgbm_classifier = LightGBMRegressor(train_df = df, target_column = 'SalePrice')
     lightgbm_classifier.tune_hyper_parameters()
     model = lightgbm_classifier.train()
 

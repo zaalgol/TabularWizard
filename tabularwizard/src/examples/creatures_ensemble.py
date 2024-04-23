@@ -56,26 +56,26 @@ def train_model():
     train_data = train_data.set_index('id')
     print(train_data.head())
 
-    lgbm_classifier = LightgbmClassifier(train_df = train_data.copy(), prediction_column = 'type')
+    lgbm_classifier = LightgbmClassifier(train_df = train_data.copy(), target_column = 'type')
     if tune:
         lgbm_classifier.tune_hyper_parameters(scoring='accuracy')
     lgbm_model = lgbm_classifier.train()
     pickle.dump(lgbm_model, open(LGBM_SAVED_MODEL_FILE, 'wb'))
 
-    xgb_classifier = XgboostClassifier(train_df = train_data.copy(), prediction_column = 'type')
+    xgb_classifier = XgboostClassifier(train_df = train_data.copy(), target_column = 'type')
     if tune:
         xgb_classifier.tune_hyper_parameters(scoring='accuracy')
     xgb_model = xgb_classifier.train()
     pickle.dump(xgb_model, open(XGB_SAVED_MODEL_FILE, 'wb'))
 
     
-    knn_classifier = KnnClassifier(train_df = train_data.copy(), prediction_column = 'type')
+    knn_classifier = KnnClassifier(train_df = train_data.copy(), target_column = 'type')
     if tune:
         knn_classifier.tune_hyper_parameters(scoring='accuracy')
     knn_model = knn_classifier.train()
 
 
-    rf_classifier = RandomForestClassifierCustom(train_df = train_data.copy(), prediction_column = 'type')
+    rf_classifier = RandomForestClassifierCustom(train_df = train_data.copy(), target_column = 'type')
     if tune:
         rf_classifier.tune_hyper_parameters(scoring='accuracy')
     rf_model = rf_classifier.train()
@@ -83,13 +83,13 @@ def train_model():
 
     
 
-    lr_classifier = LRegression(train_df = train_data.copy(), prediction_column = 'type')
+    lr_classifier = LRegression(train_df = train_data.copy(), target_column = 'type')
     if tune:
         lr_classifier.tune_hyper_parameters(scoring='accuracy')
     lr_model = lr_classifier.train()
 
     
-    mlp_classifier = MLPNetClassifier(train_df = train_data.copy(), prediction_column = 'type')
+    mlp_classifier = MLPNetClassifier(train_df = train_data.copy(), target_column = 'type')
     if tune:
         mlp_classifier.tune_hyper_parameters(scoring='accuracy')
     mlp_model = mlp_classifier.train()
@@ -144,7 +144,7 @@ def train_model():
     #     file.write(lgbm_evaluations)
 
     # for i in range(10):
-    #     lgbm_classifier = LightgbmClassifier(train_df = train_data, prediction_column = 'type')
+    #     lgbm_classifier = LightgbmClassifier(train_df = train_data, target_column = 'type')
     #     lgbm_classifier.tune_hyper_parameters(scoring='accuracy')
     #     result, best_params, cv_score, test_metrics = lgbm_classifier.train()
     #     # Storing the results of this iteration

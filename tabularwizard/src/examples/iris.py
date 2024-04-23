@@ -20,7 +20,7 @@ def train_model():
     data_preprocessing = DataPreprocessing()
     df = data_preprocessing.map_order_column(df, 'species', {'Iris-setosa':0, 'Iris-versicolor':1, 'Iris-virginica':2})
     print(df)
-    xgboost_classifier = XgboostClassifier(train_df = df, prediction_column = 'species')
+    xgboost_classifier = XgboostClassifier(train_df = df, target_column = 'species')
     xgboost_classifier.tune_hyper_parameters()
     model = xgboost_classifier.train()
     

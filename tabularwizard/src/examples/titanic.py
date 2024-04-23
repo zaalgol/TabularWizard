@@ -40,7 +40,7 @@ def train_model():
     
     # results = []
     start_time = datetime.now().strftime("%H:%M:%S")
-    lgbm_classifier = LightgbmClassifier(train_df = df, prediction_column = 'Survived')
+    lgbm_classifier = LightgbmClassifier(train_df = df, target_column = 'Survived')
     lgbm_classifier.tune_hyper_parameters(scoring='accuracy')
     model = lgbm_classifier.train()
     end_time = datetime.now().strftime("%H:%M:%S")

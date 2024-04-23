@@ -4,9 +4,9 @@ from tabularwizard.src.base_model import BaseModel
 
 
 class BaseRegressorModel(BaseModel):
-        def __init__(self, train_df, prediction_column, split_column=None, test_size=0.2, scoring='RMSE',
+        def __init__(self, train_df, target_column, split_column=None, test_size=0.2, scoring='RMSE',
                       create_encoding_rules=False, apply_encoding_rules=False, create_transformations=False, apply_transformations=False, *args, **kwargs):
-            super().__init__(train_df, prediction_column, scoring, split_column, 
+            super().__init__(train_df, target_column, scoring, split_column, 
                              create_encoding_rules=create_encoding_rules, apply_encoding_rules=apply_encoding_rules,
                              create_transformations=create_transformations, apply_transformations=apply_transformations, test_size=test_size, *args, **kwargs)
         

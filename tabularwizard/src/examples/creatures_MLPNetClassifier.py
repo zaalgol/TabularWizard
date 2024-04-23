@@ -47,7 +47,7 @@ def train_model():
 
     # results = []
 
-    classifier = MLPNetClassifier(train_df = train_data, prediction_column = 'type')
+    classifier = MLPNetClassifier(train_df = train_data, target_column = 'type')
     classifier.tune_hyper_parameters(scoring='accuracy')
     model = classifier.train()
     pickle.dump(model, open(SAVED_MODEL_FILE, 'wb'))

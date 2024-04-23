@@ -54,7 +54,7 @@ def train_model():
     start_time = datetime.now().strftime("%H:%M:%S")
 
     df = data_preprocessing.one_hot_encode_column(train_data, "color")
-    lRegression = LRegression(train_df = df, prediction_column = 'type')
+    lRegression = LRegression(train_df = df, target_column = 'type')
     lRegression.tune_hyper_parameters()
     trained_lRegression = lRegression.train()
 
@@ -63,7 +63,7 @@ def train_model():
     evaluate.format_train_and_test_evaluation(evaluations)
     results['lRegression'] = evaluations
 
-    knnClassifier = KnnClassifier(train_df = df, prediction_column = 'type')
+    knnClassifier = KnnClassifier(train_df = df, target_column = 'type')
     knnClassifier.tune_hyper_parameters()
     trained_knnClassifier = knnClassifier.train()
     evaluate = Evaluate()
@@ -71,11 +71,11 @@ def train_model():
     evaluate.format_train_and_test_evaluation(evaluations)
     results['knnClassifier'] = evaluations
 
-    # lgbm_classifier = LightgbmClassifier(train_df = train_data, prediction_column = 'type', device='gpu')
+    # lgbm_classifier = LightgbmClassifier(train_df = train_data, target_column = 'type', device='gpu')
     cat_features  =  data_preprocessing.get_all_categorical_columns_names(train_data)
     for feature in cat_features:
         train_data[feature] = train_data[feature].astype('category')
-    lgbm_classifier = LightgbmClassifier(train_df = train_data, prediction_column = 'type')
+    lgbm_classifier = LightgbmClassifier(train_df = train_data, target_column = 'type')
     lgbm_classifier.tune_hyper_parameters()
     trained_lgbm = lgbm_classifier.train()
 
@@ -97,7 +97,7 @@ def train_model():
     # lgbm_classifier.save_tree_diagram(tree_index=0, model_folder=SAVED_MODEL_FOLDER)
 
     # for i in range(10):
-    #     lgbm_classifier = LightgbmClassifier(train_df = train_data, prediction_column = 'type')
+    #     lgbm_classifier = LightgbmClassifier(train_df = train_data, target_column = 'type')
     #     lgbm_classifier.tune_hyper_parameters(scoring='accuracy')
     #     result, best_params, cv_score, test_score = lgbm_classifier.train()
     #     # Storing the results of this iteration

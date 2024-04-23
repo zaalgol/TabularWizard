@@ -32,7 +32,7 @@ def use_traned_model():
 def train_model():
     start_time = datetime.now().strftime("%H:%M:%S")
     tune = False
-    prediction_column = 'Survived'
+    target_column = 'Survived'
     df = pd.read_csv(iris_path)
 
     print(df.head())
@@ -48,36 +48,36 @@ def train_model():
     # train_data = train_data.set_index('id')
     print(df.head())
 
-    mlp_classifier = MLPNetClassifier(train_df = df.copy(), prediction_column = prediction_column)
+    mlp_classifier = MLPNetClassifier(train_df = df.copy(), target_column = target_column)
     if tune:
         mlp_classifier.tune_hyper_parameters(scoring='accuracy')
     mlp_model = mlp_classifier.train()
 
 
-    rf_classifier = RandomForestClassifierCustom(train_df = df.copy(), prediction_column = prediction_column)
+    rf_classifier = RandomForestClassifierCustom(train_df = df.copy(), target_column = target_column)
     if tune:
         rf_classifier.tune_hyper_parameters(scoring='accuracy')
     rf_model = rf_classifier.train()
 
 
-    lgbm_classifier = LightgbmClassifier(train_df = df.copy(), prediction_column = prediction_column)
+    lgbm_classifier = LightgbmClassifier(train_df = df.copy(), target_column = target_column)
     if tune:
         lgbm_classifier.tune_hyper_parameters(scoring='accuracy')
     lgbm_model = lgbm_classifier.train()
 
 
-    xgb_classifier = XgboostClassifier(train_df = df.copy(), prediction_column = prediction_column)
+    xgb_classifier = XgboostClassifier(train_df = df.copy(), target_column = target_column)
     if tune:
         xgb_classifier.tune_hyper_parameters(scoring='accuracy')
     xgb_model = xgb_classifier.train()
  
 
-    lr_classifier = LRegression(train_df = df.copy(), prediction_column = prediction_column)
+    lr_classifier = LRegression(train_df = df.copy(), target_column = target_column)
     if tune:
         lr_classifier.tune_hyper_parameters(scoring='accuracy')
     lr_model = lr_classifier.train()
 
-    knn_classifier = KnnClassifier(train_df = df.copy(), prediction_column = prediction_column)
+    knn_classifier = KnnClassifier(train_df = df.copy(), target_column = target_column)
     if tune:
         lr_classifier.tune_hyper_parameters(scoring='accuracy')
     knn_model = knn_classifier.train()
@@ -136,7 +136,7 @@ def train_model():
     #     file.write(lgbm_evaluations)
 
     # for i in range(10):
-    #     lgbm_classifier = LightgbmClassifier(train_df = train_data, prediction_column = prediction_column)
+    #     lgbm_classifier = LightgbmClassifier(train_df = train_data, target_column = target_column)
     #     lgbm_classifier.tune_hyper_parameters(scoring='accuracy')
     #     result, best_params, cv_score, test_score = lgbm_classifier.train()
     #     # Storing the results of this iteration

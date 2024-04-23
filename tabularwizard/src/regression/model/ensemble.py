@@ -15,22 +15,22 @@ from sklearn.ensemble import VotingRegressor
 from itertools import islice
 
 class Ensemble(BaseRegressorModel):
-    def __init__(self, train_df, prediction_column, split_column=None, create_encoding_rules=False, apply_encoding_rules=False,
+    def __init__(self, train_df, target_column, split_column=None, create_encoding_rules=False, apply_encoding_rules=False,
                   create_transformations=False, apply_transformations=False, test_size=0.3, scoring='RMSE'):
         self.regressors = {}
-        super().__init__(train_df=train_df, prediction_column=prediction_column, scoring=scoring, split_column=split_column, test_size=test_size,
+        super().__init__(train_df=train_df, target_column=target_column, scoring=scoring, split_column=split_column, test_size=test_size,
                     create_encoding_rules=create_encoding_rules, apply_encoding_rules=apply_encoding_rules, 
                     create_transformations=create_transformations, apply_transformations=apply_transformations)
         self.already_splitted_data = {'X_train': self.X_train, 'X_test': self.X_test, 'y_train': self.y_train, 'y_test':self.y_test}
         self.evaluate = Evaluate()
 
     def create_models(self, df):
-        self.regressors['lgbm_regressor'] = {'model':LightGBMRegressor(train_df = df.copy(), prediction_column = self.prediction_column, already_splitted_data=self.already_splitted_data)}
-        self.regressors['mlr_regressor'] = {'model':MLPNetRegressor(train_df = df.copy(), prediction_column = self.prediction_column, already_splitted_data=self.already_splitted_data)}
-        self.regressors['xgb_regressor'] = {'model':XgboostRegressor(train_df = df.copy(), prediction_column = self.prediction_column, already_splitted_data=self.already_splitted_data)}
-        self.regressors['rf_regressor'] = {'model':RandomForestRegressorModel(train_df = df.copy(), prediction_column = self.prediction_column, already_splitted_data=self.already_splitted_data)}
-        self.regressors['svr_regressor'] = {'model':SVRRegressorModel(train_df = df.copy(), prediction_column = self.prediction_column, already_splitted_data=self.already_splitted_data)}
-        self.regressors['cat_regressor'] = {'model':CatboostRegressor(train_df = df.copy(), prediction_column = self.prediction_column, already_splitted_data=self.already_splitted_data)}
+        self.regressors['lgbm_regressor'] = {'model':LightGBMRegressor(train_df = df.copy(), target_column = self.target_column, already_splitted_data=self.already_splitted_data)}
+        self.regressors['mlr_regressor'] = {'model':MLPNetRegressor(train_df = df.copy(), target_column = self.target_column, already_splitted_data=self.already_splitted_data)}
+        self.regressors['xgb_regressor'] = {'model':XgboostRegressor(train_df = df.copy(), target_column = self.target_column, already_splitted_data=self.already_splitted_data)}
+        self.regressors['rf_regressor'] = {'model':RandomForestRegressorModel(train_df = df.copy(), target_column = self.target_column, already_splitted_data=self.already_splitted_data)}
+        self.regressors['svr_regressor'] = {'model':SVRRegressorModel(train_df = df.copy(), target_column = self.target_column, already_splitted_data=self.already_splitted_data)}
+        self.regressors['cat_regressor'] = {'model':CatboostRegressor(train_df = df.copy(), target_column = self.target_column, already_splitted_data=self.already_splitted_data)}
     def tune_hyper_parameters(self):
         for regressor_value in self.regressors.values():
             regressor_value['model'].tune_hyper_parameters(scoring=self.scoring)
@@ -69,7 +69,7 @@ if __name__ == '__main__':
     train_data = data_preprocessing.fill_missing_numeric_cells(train_data)
     train_data = data_preprocessing.exclude_columns(train_data, [target_column])
     train_data[target_column] = train_data_capy[target_column]
-    ensemble = Ensemble(train_df=train_data, prediction_column=target_column,
+    ensemble = Ensemble(train_df=train_data, target_column=target_column,
                             create_encoding_rules=True, apply_encoding_rules=True,
                             create_transformations=True, apply_transformations=True)
     ensemble.create_models(train_data)

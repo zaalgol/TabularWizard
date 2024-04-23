@@ -24,7 +24,7 @@ def train_model():
     missing = dataPreprocessing.get_missing_values_per_coloun(df)
     show_missing(df)
     df = perprocess_data(df)
-    xgboost_classifier = XgboostRegressor(train_df = df, prediction_column = 'SalePrice')
+    xgboost_classifier = XgboostRegressor(train_df = df, target_column = 'SalePrice')
     xgboost_classifier.tune_hyper_parameters()
     model = xgboost_classifier.train()
 

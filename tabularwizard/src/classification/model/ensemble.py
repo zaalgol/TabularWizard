@@ -20,9 +20,9 @@ from src.classification.evaluate import Evaluate
 from src.data_preprocessing import DataPreprocessing
 
 class Ensemble(BaseClassfierModel):
-    def __init__(self, train_df, prediction_column, split_column=None, create_encoding_rules=False, apply_encoding_rules=False,
+    def __init__(self, train_df, target_column, split_column=None, create_encoding_rules=False, apply_encoding_rules=False,
                   create_transformations=False, apply_transformations=False, test_size=0.3, scoring='accuracy'):
-        super().__init__(train_df=train_df, prediction_column=prediction_column, scoring=scoring, split_column=split_column, test_size=test_size,
+        super().__init__(train_df=train_df, target_column=target_column, scoring=scoring, split_column=split_column, test_size=test_size,
                     create_encoding_rules=create_encoding_rules, apply_encoding_rules=apply_encoding_rules, create_transformations=create_transformations, apply_transformations=apply_transformations)
         self.classifiers = {}
         self.temp = {}
@@ -30,16 +30,16 @@ class Ensemble(BaseClassfierModel):
         self.evaluate = Evaluate()
 
     def create_models(self, df):
-        # self.classifiers['svr_classifier'] = {'model':SvmClassifier(train_df = df.copy(), prediction_column = self.prediction_column, already_splitted_data=self.already_splitted_data)}
-        self.classifiers['cat_classifier'] = {'model':CatboostClassifier(train_df = df.copy(), prediction_column = self.prediction_column, already_splitted_data=self.already_splitted_data)}
-        self.classifiers['lgbm_classifier'] = {'model':LightgbmClassifier(train_df = df.copy(), prediction_column = self.prediction_column, already_splitted_data=self.already_splitted_data)}
-        self.classifiers['knn_classifier'] = {'model':KnnClassifier(train_df = df.copy(), prediction_column = self.prediction_column, already_splitted_data=self.already_splitted_data)}
-        self.classifiers['LRegression'] = {'model':LRegression(train_df = df.copy(), prediction_column = self.prediction_column, already_splitted_data=self.already_splitted_data)}
-        self.classifiers['mlp_classifier'] = {'model':MLPNetClassifier(train_df = df.copy(), prediction_column = self.prediction_column, already_splitted_data=self.already_splitted_data)}
-        self.classifiers['rf_classifier'] = {'model':RandomForestClassifierCustom(train_df = df.copy(), prediction_column = self.prediction_column, already_splitted_data=self.already_splitted_data)}
-        self.classifiers['nb_classifier'] = {'model':NaiveBayesClassifier(train_df = df.copy(), prediction_column = self.prediction_column, already_splitted_data=self.already_splitted_data)}
-        if df[self.prediction_column].dtype not in ['category', 'object']:
-            self.classifiers['xgb_classifier'] = {'model':XgboostClassifier(train_df = df.copy(), prediction_column = self.prediction_column, already_splitted_data=self.already_splitted_data)}
+        # self.classifiers['svr_classifier'] = {'model':SvmClassifier(train_df = df.copy(), target_column = self.target_column, already_splitted_data=self.already_splitted_data)}
+        self.classifiers['cat_classifier'] = {'model':CatboostClassifier(train_df = df.copy(), target_column = self.target_column, already_splitted_data=self.already_splitted_data)}
+        self.classifiers['lgbm_classifier'] = {'model':LightgbmClassifier(train_df = df.copy(), target_column = self.target_column, already_splitted_data=self.already_splitted_data)}
+        self.classifiers['knn_classifier'] = {'model':KnnClassifier(train_df = df.copy(), target_column = self.target_column, already_splitted_data=self.already_splitted_data)}
+        self.classifiers['LRegression'] = {'model':LRegression(train_df = df.copy(), target_column = self.target_column, already_splitted_data=self.already_splitted_data)}
+        self.classifiers['mlp_classifier'] = {'model':MLPNetClassifier(train_df = df.copy(), target_column = self.target_column, already_splitted_data=self.already_splitted_data)}
+        self.classifiers['rf_classifier'] = {'model':RandomForestClassifierCustom(train_df = df.copy(), target_column = self.target_column, already_splitted_data=self.already_splitted_data)}
+        self.classifiers['nb_classifier'] = {'model':NaiveBayesClassifier(train_df = df.copy(), target_column = self.target_column, already_splitted_data=self.already_splitted_data)}
+        if df[self.target_column].dtype not in ['category', 'object']:
+            self.classifiers['xgb_classifier'] = {'model':XgboostClassifier(train_df = df.copy(), target_column = self.target_column, already_splitted_data=self.already_splitted_data)}
 
         
     def tune_hyper_parameters(self):
@@ -99,7 +99,7 @@ if __name__ == "__main__":
     train_data = data_preprocessing.fill_missing_numeric_cells(train_data)
     train_data = data_preprocessing.exclude_columns(train_data, [target_column])
     train_data[target_column] = train_data_capy[target_column]
-    ensemble = Ensemble(train_df=train_data, prediction_column=target_column,
+    ensemble = Ensemble(train_df=train_data, target_column=target_column,
                          create_encoding_rules=True, apply_encoding_rules=True,
                          create_transformations=True, apply_transformations=True)
     ensemble.create_models(train_data)
