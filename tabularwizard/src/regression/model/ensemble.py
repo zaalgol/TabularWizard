@@ -56,8 +56,13 @@ class Ensemble(BaseRegressorModel):
         self.voting_regressor_evaluations = self.evaluate.evaluate_train_and_test(self.trained_voting_regressor, self)
 
 if __name__ == '__main__':
-    target_column = 'SalePrice'
-    train_path = "tabularwizard/datasets/house_prices_train.csv"
+    # target_column = 'SalePrice'
+    # train_path = "tabularwizard/datasets/house_prices_train.csv"
+    
+    target_column = 'price'
+    train_path = "tabularwizard/datasets/diamonds.csv"
+    
+    
     # # train_path = "tabularwizard/datasets/phone-price-classification/train.csv"
     # train_path = "tabularwizard/datasets/titanic.csv"
     # train_path = "tabularwizard/datasets/ghouls-goblins-and-ghosts-boo/train.csv"
@@ -67,8 +72,8 @@ if __name__ == '__main__':
     data_preprocessing = DataPreprocessing()
     train_data = data_preprocessing.sanitize_dataframe(train_data)
     train_data = data_preprocessing.fill_missing_numeric_cells(train_data)
-    train_data = data_preprocessing.exclude_columns(train_data, [target_column])
-    train_data[target_column] = train_data_capy[target_column]
+    # train_data = data_preprocessing.exclude_columns(train_data, [target_column])
+    # train_data[target_column] = train_data_capy[target_column]
     ensemble = Ensemble(train_df=train_data, target_column=target_column,
                             create_encoding_rules=True, apply_encoding_rules=True,
                             create_transformations=True, apply_transformations=True)

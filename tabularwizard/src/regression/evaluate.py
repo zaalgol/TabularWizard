@@ -10,9 +10,9 @@ class Evaluate:
         rmse = np.sqrt(mse)  # Calculating RMSE
         r2 = r2_score(y_true, y_pred)
         mae = mean_absolute_error(y_true, y_pred)
-        rmsle = np.sqrt(mean_squared_log_error(y_true, y_pred))
+        # rmsle = np.sqrt(mean_squared_log_error(y_true, y_pred))
 
-        return {'MSE': mse, 'MAE': mae, 'R2': r2, 'RMSE':rmse, 'RMSLE':rmsle }
+        return {'MSE': mse, 'MAE': mae, 'R2': r2, 'RMSE':rmse}# , 'RMSLE':rmsle }
 
         # Construct results string
         # results_lines = {
