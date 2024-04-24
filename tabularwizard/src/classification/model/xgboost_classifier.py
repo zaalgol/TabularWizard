@@ -8,7 +8,7 @@ from tabularwizard.src.data_preprocessing import DataPreprocessing
 DEFAULT_PARAMS = {
 'learning_rate': Real(0.01, 0.5, prior='log-uniform'),  # Log-uniform is more suitable for learning rates
     'n_estimators': Integer(50, 300),  # Number of trees, integer within a range
-    'max_depth': Integer(3, 10),  # Maximum depth of each tree
+    'max_depth': Integer(3, 10, prior='log-uniform'),  # Maximum depth of each tree
     'subsample': Real(0.6, 1.0, prior='uniform'),  # Subsample ratio of the training instances
     'colsample_bytree': Real(0.6, 1.0, prior='uniform'),  # Subsample ratio of columns when constructing each tree
     'colsample_bylevel': Real(0.6, 1.0, prior='uniform'),  # Subsample ratio of columns for each level
