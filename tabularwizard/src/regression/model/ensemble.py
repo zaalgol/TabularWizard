@@ -18,7 +18,7 @@ from itertools import islice
 
 class Ensemble(BaseRegressorModel):
     def __init__(self, train_df, target_column, split_column=None, create_encoding_rules=False, apply_encoding_rules=False,
-                  create_transformations=False, apply_transformations=False, test_size=0.3, scoring='RMSE', top_n_best_models=3):
+                  create_transformations=False, apply_transformations=False, test_size=0.3, scoring='neg_root_mean_squared_error', top_n_best_models=3):
         self.regressors = {}
         super().__init__(train_df=train_df, target_column=target_column, scoring=scoring, split_column=split_column, test_size=test_size,
                     create_encoding_rules=create_encoding_rules, apply_encoding_rules=apply_encoding_rules, 
@@ -29,16 +29,48 @@ class Ensemble(BaseRegressorModel):
         self.top_n_best_models = top_n_best_models
 
     def create_models(self, df):
-        self.regressors['lgbm_regressor'] = {'model':LightGBMRegressor(train_df = df.copy(), target_column = self.target_column, already_splitted_data=self.already_splitted_data)}
-        self.regressors['mlr_regressor'] = {'model':MLPNetRegressor(train_df = df.copy(), target_column = self.target_column, already_splitted_data=self.already_splitted_data)}
-        self.regressors['xgb_regressor'] = {'model':XgboostRegressor(train_df = df.copy(), target_column = self.target_column, already_splitted_data=self.already_splitted_data)}
-        self.regressors['rf_regressor'] = {'model':RandomForestRegressorModel(train_df = df.copy(), target_column = self.target_column, already_splitted_data=self.already_splitted_data)}
-        self.regressors['svr_regressor'] = {'model':SVRRegressorModel(train_df = df.copy(), target_column = self.target_column, already_splitted_data=self.already_splitted_data)}
-        self.regressors['cat_regressor'] = {'model':CatboostRegressor(train_df = df.copy(), target_column = self.target_column, already_splitted_data=self.already_splitted_data)}
+        model_classes = {
+            'lgbm_regressor': LightGBMRegressor,
+            'mlr_regressor': MLPNetRegressor,
+            'xgb_regressor': XgboostRegressor,
+            'rf_regressor': RandomForestRegressorModel,
+            'svr_regressor': SVRRegressorModel,
+            'cat_regressor': CatboostRegressor
+        }
+        self.regressors = {
+            key: self._regressor_factory(model_class, df)
+            for key, model_class in model_classes.items()
+        }
+        # self.regressors['lgbm_regressor'] = {'model':LightGBMRegressor(train_df = df.copy(), target_column = self.target_column, already_splitted_data=self.already_splitted_data)}
+        # self.regressors['mlr_regressor'] = {'model':MLPNetRegressor(train_df = df.copy(), target_column = self.target_column, already_splitted_data=self.already_splitted_data)}
+        # self.regressors['xgb_regressor'] = {'model':XgboostRegressor(train_df = df.copy(), target_column = self.target_column, already_splitted_data=self.already_splitted_data)}
+        # self.regressors['rf_regressor'] = {'model':RandomForestRegressorModel(train_df = df.copy(), target_column = self.target_column, already_splitted_data=self.already_splitted_data)}
+        # self.regressors['svr_regressor'] = {'model':SVRRegressorModel(train_df = df.copy(), target_column = self.target_column, already_splitted_data=self.already_splitted_data)}
+        # self.regressors['cat_regressor'] = {'model':CatboostRegressor(train_df = df.copy(), target_column = self.target_column, already_splitted_data=self.already_splitted_data)}
+        
+    def _regressor_factory(self, model_class, train_df):
+        return {
+        'model': model_class(
+                train_df=train_df.copy(), 
+                target_column=self.target_column, 
+                already_splitted_data=self.already_splitted_data,
+                scoring=self.scoring
+            )
+        }
+        
+        
     
     def tune_hyper_parameters(self):
         for regressor_value in self.regressors.values():
-            regressor_value['model'].tune_hyper_parameters(scoring=self.scoring)
+            regressor_value['model'].tune_hyper_parameters()
+            
+    def tuning_top_models(self):
+        top_models = list(islice(self.regressors.items(), self.top_n_best_models))
+        for name, model_info in top_models:
+            print(f"Tuning and retraining {name}...")
+            model_info['model'].tune_hyper_parameters()
+            model_info['trained_model'] = model_info['model'].train()
+            model_info['evaluations'] = self.evaluate.evaluate_train_and_test(model_info['trained_model'], model_info['model'])
 
     def train_all_models(self):
         for regressor_value in self.regressors.values():
@@ -46,9 +78,9 @@ class Ensemble(BaseRegressorModel):
 
     def sort_models_by_score(self):
         
-        scores = {name: cross_val_score(value['model'].estimator, self.X_train, self.y_train, cv=5) for name, value in self.regressors.items()}
+        scores = {name: cross_val_score(value['model'].estimator, self.X_train, self.y_train, cv=5, scoring=self.scoring) for name, value in self.regressors.items()}
         average_scores = {name: score.mean() for name, score in scores.items()}
-        sorted_names = sorted(average_scores, key=average_scores.get, reverse=self.scoring=='R2')
+        sorted_names = sorted(average_scores, key=average_scores.get, reverse=True)# self.scoring=='neg_mean_absolute_error')
         self.regressors = OrderedDict((name, self.regressors[name]) for name in sorted_names)
         
         # for regressor_value in self.regressors.values():
@@ -67,16 +99,13 @@ class Ensemble(BaseRegressorModel):
         self.voting_regressor_evaluations = self.evaluate.evaluate_train_and_test(self.trained_voting_regressor, self)
 
 if __name__ == '__main__':
-    # target_column = 'SalePrice'
-    # train_path = "tabularwizard/datasets/house_prices_train.csv"
+    target_column = 'SalePrice'
+    train_path = "tabularwizard/datasets/house_prices_train.csv"
     
-    target_column = 'price'
-    train_path = "tabularwizard/datasets/diamonds.csv"
+    # target_column = 'price'
+    # train_path = "tabularwizard/datasets/diamonds.csv"
     
     
-    # # train_path = "tabularwizard/datasets/phone-price-classification/train.csv"
-    # train_path = "tabularwizard/datasets/titanic.csv"
-    # train_path = "tabularwizard/datasets/ghouls-goblins-and-ghosts-boo/train.csv"
     train_data = pd.read_csv(train_path)
     train_data_capy = train_data.copy()
 
@@ -95,6 +124,7 @@ if __name__ == '__main__':
     #     print("<" * 20 +  f" Name {name}, train: {value['evaluations']['train_metrics'][ensemble.scoring]} test: {value['evaluations']['test_metrics'][ensemble.scoring]}")
 
     ensemble.create_voting_regressor()
+    ensemble.tuning_top_models()
     ensemble.train_voting_regressor()
     ensemble.evaluate_voting_regressor()
 

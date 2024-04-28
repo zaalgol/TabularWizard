@@ -1,4 +1,4 @@
-
+# https://chat.openai.com/c/00f0f9f4-1e06-471d-a202-cdbd2d9a6a8c
 import numpy as np
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score, log_loss, precision_score, recall_score, roc_auc_score, f1_score
 
@@ -22,12 +22,14 @@ class Evaluate:
 
         if num_classes == 2:
             # Binary classification metrics
+            accuracy = self.get_accurecy_score(y_true, y_pred)
             precision = precision_score(y_true, y_pred)
             recall = recall_score(y_true, y_pred)
             f1 = f1_score(y_true, y_pred)  # Direct calculation for binary
             auc = roc_auc_score(y_true, y_proba[:, 1])  # Use probabilities for the positive class
         else:
             # Multi-class classification metrics
+            accuracy = self.get_accurecy_score(y_true, y_pred)
             precision = precision_score(y_true, y_pred, average='macro')
             recall = recall_score(y_true, y_pred, average='macro')
             f1 = f1_score(y_true, y_pred, average='macro')  # Specify averaging method

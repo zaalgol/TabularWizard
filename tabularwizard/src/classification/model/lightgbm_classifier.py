@@ -39,10 +39,11 @@ DEFAULT_PARAMS = {
 
 class LightgbmClassifier(BaseClassfierModel):
     def __init__(self, train_df, target_column, split_column=None, create_encoding_rules=False, apply_encoding_rules=False,
-                 test_size=0.3, already_splitted_data=None, *args, **kwargs):
+                 test_size=0.3, scoring='accuracy', sampling_strategy='conditionalOversampling', already_splitted_data=None, *args, **kwargs):
         super().__init__(train_df=train_df, target_column=target_column, split_column=split_column, create_encoding_rules=create_encoding_rules, 
-                         apply_encoding_rules=apply_encoding_rules, test_size=test_size, already_splitted_data=already_splitted_data, *args, **kwargs)
-        objective = 'multiclass' if self.unique_classes > 2 else 'binary'
+                         apply_encoding_rules=apply_encoding_rules, test_size=test_size, scoring=scoring,
+                         already_splitted_data=already_splitted_data, sampling_strategy=sampling_strategy, *args, **kwargs)
+        objective = 'multiclass' if train_df[target_column].nunique() > 2 else 'binary'
         self.X_train = DataPreprocessing().set_not_numeric_as_categorial(self.X_train)
         self.X_test = DataPreprocessing().set_not_numeric_as_categorial(self.X_test)
         self.estimator = LGBMClassifier(objective=objective, *args, **kwargs)
@@ -50,8 +51,6 @@ class LightgbmClassifier(BaseClassfierModel):
     @property
     def default_params(self):
         default_params = DEFAULT_PARAMS_OLD
-        # if self.unique_classes > 2:
-        #     default_params.pop('scale_pos_weight', None)
         return default_params
     
 

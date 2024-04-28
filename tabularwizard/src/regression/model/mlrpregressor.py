@@ -14,9 +14,13 @@ DEFAULT_PARAMS = {
 }
 
 class MLPNetRegressor(BaseRegressorModel):
-    def __init__(self, train_df, target_column, split_column=None, create_encoding_rules=False, apply_encoding_rules=False, create_transformations=False, apply_transformations=False, test_size=0.3, already_splitted_data=None, *args, **kwargs):
+    def __init__(self, train_df, target_column, split_column=None, create_encoding_rules=False, apply_encoding_rules=False, 
+                 create_transformations=False, apply_transformations=False, test_size=0.3, already_splitted_data=None, scoring='r2',
+                 *args, **kwargs):
         super().__init__(train_df, target_column, split_column=split_column, test_size=test_size,  
-                         create_encoding_rules=create_encoding_rules, apply_encoding_rules=apply_encoding_rules, create_transformations=create_transformations, apply_transformations=apply_transformations, already_splitted_data=already_splitted_data)
+                         create_encoding_rules=create_encoding_rules, apply_encoding_rules=apply_encoding_rules, 
+                         create_transformations=create_transformations, apply_transformations=apply_transformations,
+                         already_splitted_data=already_splitted_data, scoring=scoring, *args, **kwargs)
         self.estimator = MLPRegressor(*args, **kwargs)
 
     def train(self):
@@ -29,14 +33,14 @@ class MLPNetRegressor(BaseRegressorModel):
             return result
         
 
-    def tune_hyper_parameters(self, params=None, scoring='r2', kfold=10):
+    def tune_hyper_parameters(self, params=None, kfold=10):
             if params is None:
                 params = self.default_params
             Kfold = KFold(n_splits=kfold)  
             
             self.search = GridSearchCV(estimator=self.estimator,
                                         param_grid=params,
-                                        scoring=scoring,
+                                        scoring=self.scoring,
                                         n_jobs=1, 
                                         cv=Kfold,
                                         verbose=0)
