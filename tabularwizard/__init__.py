@@ -1,8 +1,8 @@
-from tabularwizard.src.data_preprocessing import DataPreprocessing
-from tabularwizard.src.classification.model.lightgbm_classifier import LightgbmClassifier
-from tabularwizard.src.regression.model.lightgbm_regerssor import LightGBMRegressor
-from tabularwizard.src.classification.evaluate import Evaluate as ClassificationEvaluate
-from tabularwizard.src.regression.evaluate import Evaluate as RegressionEvaluate
-from tabularwizard.src.classification.model.knn_classifier import KnnClassifier
-from tabularwizard.src.classification.model.ensemble import Ensemble as ClassificationEnsemble
-from tabularwizard.src.regression.model.ensemble import Ensemble as RegressionEnsemble
+from src.data_preprocessing import DataPreprocessing
+from src.classification.model.lightgbm_classifier import LightgbmClassifier
+from src.regression.model.lightgbm_regerssor import LightGBMRegressor
+from src.classification.evaluate import Evaluate as ClassificationEvaluate
+from src.regression.evaluate import Evaluate as RegressionEvaluate
+from src.classification.model.knn_classifier import KnnClassifier
+from src.classification.model.ensemble import Ensemble as ClassificationEnsemble
+from src.regression.model.ensemble import Ensemble as RegressionEnsemble

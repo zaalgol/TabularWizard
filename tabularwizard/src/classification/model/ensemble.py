@@ -7,7 +7,7 @@ from sklearn.ensemble import VotingClassifier
 from itertools import islice
 
 
-from tabularwizard.src.classification.model.base_classifier_model import BaseClassfierModel
+from src.classification.model.base_classifier_model import BaseClassfierModel
 from src.classification.model.knn_classifier import KnnClassifier
 from src.classification.model.logistic_regression import LRegression
 from src.classification.model.mlpclassifier import MLPNetClassifier
@@ -58,7 +58,7 @@ class Ensemble(BaseClassfierModel):
     def sort_models_by_score(self):
         scores = {name: cross_val_score(value['model'].estimator, self.X_train, self.y_train, cv=5) for name, value in self.classifiers.items()}
         average_scores = {name: score.mean() for name, score in scores.items()}
-        sorted_names = sorted(average_scores, key=average_scores.get, reverse=self.scoring != 'loss')
+        sorted_names = sorted(average_scores, key=average_scores.get, reverse=self.scoring != 'log loss')
         self.classifiers = OrderedDict((name, self.classifiers[name]) for name in sorted_names)
 
         for name, avg_score in average_scores.items():

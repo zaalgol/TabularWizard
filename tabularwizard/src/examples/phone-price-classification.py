@@ -4,16 +4,16 @@ from datetime import datetime
 import os
 import pickle
 import pandas as pd
-from tabularwizard.src.classification.evaluate import Evaluate
-from tabularwizard.src.classification.model.catboot_classifier import CatboostClassifier
-from tabularwizard.src.classification.model.knn_classifier import KnnClassifier
-from tabularwizard.src.classification.model.lightgbm_classifier import LightgbmClassifier
-from tabularwizard.src.classification.model.logistic_regression import LRegression
-from tabularwizard.src.data_preprocessing import DataPreprocessing
-from tabularwizard.src.plot_data import plot_boxen_correlation_between_x_y, plot_corelation_between_all_columns, plot_point_correlation_between_x_y
+from src.classification.evaluate import Evaluate
+from src.classification.model.catboot_classifier import CatboostClassifier
+from src.classification.model.knn_classifier import KnnClassifier
+from src.classification.model.lightgbm_classifier import LightgbmClassifier
+from src.classification.model.logistic_regression import LRegression
+from src.data_preprocessing import DataPreprocessing
+from src.plot_data import plot_boxen_correlation_between_x_y, plot_corelation_between_all_columns, plot_point_correlation_between_x_y
 import matplotlib.pyplot as plt
 
-from tabularwizard.src.visualize import plot_all_correlation, plot_correlation_one_vs_others, plot_correlation_two_columns, show_distrebution_of_categatial_column_valuse, show_distribution_of_numeric_column_values, show_missing
+from src.visualize import plot_all_correlation, plot_correlation_one_vs_others, plot_correlation_two_columns, show_distrebution_of_categatial_column_valuse, show_distribution_of_numeric_column_values, show_missing
 
 
 

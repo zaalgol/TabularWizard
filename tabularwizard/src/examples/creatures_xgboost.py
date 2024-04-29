@@ -2,9 +2,9 @@
 import os
 import pickle
 import pandas as pd
-from tabularwizard.src.classification.evaluate import Evaluate
-from tabularwizard.src.classification.model.xgboost_classifier import XgboostClassifier
-from tabularwizard.src.data_preprocessing import DataPreprocessing
+from src.classification.evaluate import Evaluate
+from src.classification.model.xgboost_classifier import XgboostClassifier
+from src.data_preprocessing import DataPreprocessing
 from datetime import datetime
 
 

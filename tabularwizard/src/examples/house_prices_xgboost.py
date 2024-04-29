@@ -1,13 +1,13 @@
 import os
 import pickle
 import pandas as pd
-from tabularwizard.src.regression.evaluate import Evaluate
-from tabularwizard.src.regression.model.xgboost_regressor import XgboostRegressor
-from tabularwizard.src.data_preprocessing import DataPreprocessing
+from src.regression.evaluate import Evaluate
+from src.regression.model.xgboost_regressor import XgboostRegressor
+from src.data_preprocessing import DataPreprocessing
 import matplotlib.pyplot as plt
 from datetime import datetime
 
-from tabularwizard.src.visualize import show_distrebution_of_categatial_column_valuse, show_missing
+from src.visualize import show_distrebution_of_categatial_column_valuse, show_missing
 
 
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")

@@ -1,9 +1,9 @@
 import os
 from xgboost import XGBClassifier, plot_tree
 import matplotlib.pyplot as plt
-from tabularwizard.src.classification.model.base_classifier_model import BaseClassfierModel
+from src.classification.model.base_classifier_model import BaseClassfierModel
 from skopt.space import Real, Categorical, Integer
-from tabularwizard.src.data_preprocessing import DataPreprocessing 
+from src.data_preprocessing import DataPreprocessing 
 
 DEFAULT_PARAMS = {
 'learning_rate': Real(0.01, 0.5, prior='log-uniform'),  # Log-uniform is more suitable for learning rates

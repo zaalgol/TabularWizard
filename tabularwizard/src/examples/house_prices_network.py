@@ -1,9 +1,9 @@
 import os
 import pickle
 import pandas as pd
-from tabularwizard.src.classification.evaluate import Evaluate
-from tabularwizard.src.regression.model.lightgbm_regerssor import LightGBMRegressor
-from tabularwizard.src.data_preprocessing import DataPreprocessing
+from src.classification.evaluate import Evaluate
+from src.regression.model.lightgbm_regerssor import LightGBMRegressor
+from src.data_preprocessing import DataPreprocessing
 import matplotlib.pyplot as plt
 from datetime import datetime
 

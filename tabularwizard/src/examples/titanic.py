@@ -2,9 +2,9 @@ from datetime import datetime
 import os
 import pickle
 import pandas as pd
-from tabularwizard.src.classification.evaluate import Evaluate
-from tabularwizard.src.classification.model.lightgbm_classifier import LightgbmClassifier
-from tabularwizard.src.data_preprocessing import DataPreprocessing
+from src.classification.evaluate import Evaluate
+from src.classification.model.lightgbm_classifier import LightgbmClassifier
+from src.data_preprocessing import DataPreprocessing
 from sklearn import preprocessing
 
 

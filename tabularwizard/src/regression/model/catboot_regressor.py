@@ -1,7 +1,7 @@
 from skopt.space import Real, Integer
 
 from catboost import CatBoostRegressor
-from tabularwizard.src.regression.model.base_regressor_model import BaseRegressorModel
+from src.regression.model.base_regressor_model import BaseRegressorModel
 
 
 DEFAULT_PARAMS = {

@@ -1,7 +1,7 @@
 import numpy as np
 from sklearn.model_selection import GridSearchCV, KFold
 from sklearn.neural_network import MLPRegressor
-from tabularwizard.src.regression.model.base_regressor_model import BaseRegressorModel
+from src.regression.model.base_regressor_model import BaseRegressorModel
 
 DEFAULT_PARAMS = {
     'hidden_layer_sizes': [(100,), (50, 50), (100, 50, 25)],

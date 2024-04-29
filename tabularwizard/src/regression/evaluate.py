@@ -1,5 +1,5 @@
 import numpy as np
-from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score, mean_squared_log_error
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score, mean_squared_log_error, mean_absolute_percentage_error
 
 class Evaluate:
     def predict(self, model, X_data):
@@ -10,9 +10,10 @@ class Evaluate:
         rmse = np.sqrt(mse)  # Calculating RMSE
         r2 = r2_score(y_true, y_pred)
         mae = mean_absolute_error(y_true, y_pred)
+        mape = mean_absolute_percentage_error(y_true, y_pred)
         # rmsle = np.sqrt(mean_squared_log_error(y_true, y_pred))
 
-        return {'MSE': mse, 'MAE': mae, 'R2': r2, 'RMSE':rmse}# , 'RMSLE':rmsle }
+        return {'MSE': mse, 'MAE': mae, 'R2': r2, 'RMSE':rmse, 'MAPE': mape}# , 'RMSLE':rmsle }
 
         # Construct results string
         # results_lines = {

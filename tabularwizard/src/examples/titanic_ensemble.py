@@ -5,13 +5,13 @@ import pickle
 import pandas as pd
 from src.classification.model.knn_classifier import KnnClassifier
 from src.classification.model.logistic_regression import LRegression
-from tabularwizard.src.classification.evaluate import Evaluate
-from tabularwizard.src.classification.model.mlpclassifier import MLPNetClassifier
-from tabularwizard.src.classification.model.lightgbm_classifier import LightgbmClassifier
-from tabularwizard.src.classification.model.random_forest_classifier import RandomForestClassifierCustom
-from tabularwizard.src.classification.model.xgboost_classifier import XgboostClassifier
-from tabularwizard.src.data_preprocessing import DataPreprocessing
-from tabularwizard.src.classification.model.ensemble import Ensemble
+from src.classification.evaluate import Evaluate
+from src.classification.model.mlpclassifier import MLPNetClassifier
+from src.classification.model.lightgbm_classifier import LightgbmClassifier
+from src.classification.model.random_forest_classifier import RandomForestClassifierCustom
+from src.classification.model.xgboost_classifier import XgboostClassifier
+from src.data_preprocessing import DataPreprocessing
+from src.classification.model.ensemble import Ensemble
 from sklearn.ensemble import VotingClassifier
 
 

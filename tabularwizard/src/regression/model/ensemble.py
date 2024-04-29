@@ -5,7 +5,7 @@ import pandas as pd
 from scipy.stats import mode
 from sklearn.model_selection import cross_val_score
 from src.data_preprocessing import DataPreprocessing
-from tabularwizard.src.regression.model.base_regressor_model import BaseRegressorModel
+from src.regression.model.base_regressor_model import BaseRegressorModel
 from src.regression.model.random_forest_regressor import RandomForestRegressorModel
 from src.regression.model.svr_regressor import SVRRegressorModel
 from src.regression.model.catboot_regressor import CatboostRegressor
@@ -41,13 +41,7 @@ class Ensemble(BaseRegressorModel):
             key: self._regressor_factory(model_class, df)
             for key, model_class in model_classes.items()
         }
-        # self.regressors['lgbm_regressor'] = {'model':LightGBMRegressor(train_df = df.copy(), target_column = self.target_column, already_splitted_data=self.already_splitted_data)}
-        # self.regressors['mlr_regressor'] = {'model':MLPNetRegressor(train_df = df.copy(), target_column = self.target_column, already_splitted_data=self.already_splitted_data)}
-        # self.regressors['xgb_regressor'] = {'model':XgboostRegressor(train_df = df.copy(), target_column = self.target_column, already_splitted_data=self.already_splitted_data)}
-        # self.regressors['rf_regressor'] = {'model':RandomForestRegressorModel(train_df = df.copy(), target_column = self.target_column, already_splitted_data=self.already_splitted_data)}
-        # self.regressors['svr_regressor'] = {'model':SVRRegressorModel(train_df = df.copy(), target_column = self.target_column, already_splitted_data=self.already_splitted_data)}
-        # self.regressors['cat_regressor'] = {'model':CatboostRegressor(train_df = df.copy(), target_column = self.target_column, already_splitted_data=self.already_splitted_data)}
-        
+       
     def _regressor_factory(self, model_class, train_df):
         return {
         'model': model_class(

@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from skopt.space import Real, Categorical, Integer
 
 from catboost import CatBoostClassifier
-from tabularwizard.src.classification.model.base_classifier_model import BaseClassfierModel
+from src.classification.model.base_classifier_model import BaseClassfierModel
 
 
 DEFAULT_PARAMS = {

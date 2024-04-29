@@ -3,13 +3,13 @@ from datetime import datetime
 import os
 import pickle
 import pandas as pd
-from tabularwizard.src.classification.evaluate import Evaluate
-from tabularwizard.src.classification.model.catboot_classifier import CatboostClassifier
-from tabularwizard.src.classification.model.mlpclassifier import MLPNetClassifier
-from tabularwizard.src.classification.model.lightgbm_classifier import LightgbmClassifier
-from tabularwizard.src.classification.model.random_forest_classifier import RandomForestClassifierCustom
-from tabularwizard.src.classification.model.xgboost_classifier import XgboostClassifier
-from tabularwizard.src.data_preprocessing import DataPreprocessing
+from src.classification.evaluate import Evaluate
+from src.classification.model.catboot_classifier import CatboostClassifier
+from src.classification.model.mlpclassifier import MLPNetClassifier
+from src.classification.model.lightgbm_classifier import LightgbmClassifier
+from src.classification.model.random_forest_classifier import RandomForestClassifierCustom
+from src.classification.model.xgboost_classifier import XgboostClassifier
+from src.data_preprocessing import DataPreprocessing
 from sklearn.ensemble import VotingClassifier
 from imblearn.over_sampling import SMOTE
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")

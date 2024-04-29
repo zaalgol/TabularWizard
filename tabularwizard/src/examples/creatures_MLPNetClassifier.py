@@ -1,9 +1,9 @@
 import os
 import pickle
 import pandas as pd
-from tabularwizard.src.classification.evaluate import Evaluate
-from tabularwizard.src.classification.model.mlpclassifier import MLPNetClassifier
-from tabularwizard.src.data_preprocessing import DataPreprocessing
+from src.classification.evaluate import Evaluate
+from src.classification.model.mlpclassifier import MLPNetClassifier
+from src.data_preprocessing import DataPreprocessing
 from datetime import datetime
 
 

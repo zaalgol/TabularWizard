@@ -6,6 +6,9 @@ class Evaluate:
     def predict(self, model, X_data):
         return model.predict(X_data)
     
+    def predict_proba(self, model, X_data):
+        return model.predict_proba(X_data)
+    
     def get_confution_matrix (self, y_true, y_predict):
         return confusion_matrix (y_true, y_predict)
 
@@ -35,7 +38,7 @@ class Evaluate:
             f1 = f1_score(y_true, y_pred, average='macro')  # Specify averaging method
             auc = roc_auc_score(y_true, y_proba, multi_class='ovo')  # Use One-vs-One strategy
 
-        return {'accuracy':accuracy, 'loss': loss, 'precision': precision, 'recall': recall, 'f1': f1, 'auc': auc}
+        return {'accuracy':accuracy, 'log loss': loss, 'precision': precision, 'recall': recall, 'f1': f1, 'roc auc': auc}
 
     def evaluate_train_and_test(self, model, classifier):
         y_predict = model.predict(classifier.X_train)

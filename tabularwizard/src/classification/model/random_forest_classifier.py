@@ -1,5 +1,5 @@
 from sklearn.ensemble import RandomForestClassifier
-from tabularwizard.src.classification.model.base_classifier_model import BaseClassfierModel
+from src.classification.model.base_classifier_model import BaseClassfierModel
 import matplotlib.pyplot as plt
 from sklearn.tree import plot_tree
 from skopt.space import Real, Categorical, Integer
