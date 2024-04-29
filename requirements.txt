@@ -1,3 +1,6 @@
+Flask
+Flask-JWT-Extended
+Flask-Migrate 
 catboost
 contourpy
 cycler
@@ -8,6 +11,7 @@ kiwisolver
 lightgbm
 matplotlib
 numpy
+pymongo
 packaging
 pandas
 Pillow
@@ -16,6 +20,7 @@ pyparsing
 python-dateutil
 pytz
 PyYAML
+python-dotenv
 scikit-learn
 scikit-optimize
 scipy
