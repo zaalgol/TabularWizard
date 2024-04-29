@@ -1,5 +1,5 @@
 import pandas as pd
-from src.classification.model.ensemble import Ensemble
+from src.models.classification.implementations.ensemble import Ensemble
 
 
 train_path = "tabularwizard/datasets/phone-price-classification/train.csv"

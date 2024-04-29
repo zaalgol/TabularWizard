@@ -1,8 +1,8 @@
 import os
 import pickle
 import pandas as pd
-from src.regression.evaluate import Evaluate
-from src.regression.model.xgboost_regressor import XgboostRegressor
+from src.models.regression.evaluate import Evaluate
+from src.models.regression.implementations.xgboost_regressor import XgboostRegressor
 from src.data_preprocessing import DataPreprocessing
 import matplotlib.pyplot as plt
 from datetime import datetime

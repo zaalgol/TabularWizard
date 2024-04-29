@@ -5,8 +5,8 @@ import os
 import pickle
 import pandas as pd
 from sklearn.metrics import confusion_matrix
-from src.classification.evaluate import Evaluate
-from src.classification.model.xgboost_classifier import XgboostClassifier
+from src.models.classification.evaluate import Evaluate
+from src.models.classification.implementations.xgboost_classifier import XgboostClassifier
 from src.data_preprocessing import DataPreprocessing
 
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")

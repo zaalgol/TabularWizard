@@ -1,8 +1,8 @@
 import os
 import pickle
 import pandas as pd
-from src.classification.evaluate import Evaluate
-from src.classification.model.mlpclassifier import MLPNetClassifier
+from src.models.classification.evaluate import Evaluate
+from src.models.classification.implementations.mlpclassifier import MLPNetClassifier
 from src.data_preprocessing import DataPreprocessing
 from datetime import datetime
 

@@ -7,17 +7,17 @@ from sklearn.ensemble import VotingClassifier
 from itertools import islice
 
 
-from src.classification.model.base_classifier_model import BaseClassfierModel
-from src.classification.model.knn_classifier import KnnClassifier
-from src.classification.model.logistic_regression import LRegression
-from src.classification.model.mlpclassifier import MLPNetClassifier
-from src.classification.model.lightgbm_classifier import LightgbmClassifier
-from src.classification.model.random_forest_classifier import RandomForestClassifierCustom
-from src.classification.model.xgboost_classifier import XgboostClassifier
-from src.classification.model.catboot_classifier import CatboostClassifier
-from src.classification.model.naive_bayes_classifier import NaiveBayesClassifier
-from src.classification.model.svm_classifier import SvmClassifier
-from src.classification.evaluate import Evaluate
+from src.models.classification.implementations.base_classifier_model import BaseClassfierModel
+from src.models.classification.implementations.knn_classifier import KnnClassifier
+from src.models.classification.implementations.logistic_regression import LRegression
+from src.models.classification.implementations.mlpclassifier import MLPNetClassifier
+from src.models.classification.implementations.lightgbm_classifier import LightgbmClassifier
+from src.models.classification.implementations.random_forest_classifier import RandomForestClassifierCustom
+from src.models.classification.implementations.xgboost_classifier import XgboostClassifier
+from src.models.classification.implementations.catboot_classifier import CatboostClassifier
+from src.models.classification.implementations.naive_bayes_classifier import NaiveBayesClassifier
+from src.models.classification.implementations.svm_classifier import SvmClassifier
+from src.models.classification.evaluate import Evaluate
 from src.data_preprocessing import DataPreprocessing
 from sklearn.model_selection import cross_val_score
 

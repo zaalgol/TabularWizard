@@ -4,11 +4,11 @@ from datetime import datetime
 import os
 import pickle
 import pandas as pd
-from src.classification.evaluate import Evaluate
-from src.classification.model.catboot_classifier import CatboostClassifier
-from src.classification.model.knn_classifier import KnnClassifier
-from src.classification.model.lightgbm_classifier import LightgbmClassifier
-from src.classification.model.logistic_regression import LRegression
+from src.models.classification.evaluate import Evaluate
+from src.models.classification.implementations.catboot_classifier import CatboostClassifier
+from src.models.classification.implementations.knn_classifier import KnnClassifier
+from src.models.classification.implementations.lightgbm_classifier import LightgbmClassifier
+from src.models.classification.implementations.logistic_regression import LRegression
 from src.data_preprocessing import DataPreprocessing
 from src.plot_data import plot_boxen_correlation_between_x_y, plot_corelation_between_all_columns, plot_point_correlation_between_x_y
 import matplotlib.pyplot as plt

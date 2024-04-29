@@ -2,8 +2,8 @@ import pickle
 import os
 import pandas as pd
 from src.plot_data import plot_feature_importances, plot_model
-from src.regression.evaluate import Evaluate
-from src.regression.model.lightgbm_regerssor import LightGBMRegressor
+from src.models.regression.evaluate import Evaluate
+from src.models.regression.implementations.lightgbm_regerssor import LightGBMRegressor
 from src.data_preprocessing import DataPreprocessing
 import matplotlib.pyplot as plt
 from datetime import datetime

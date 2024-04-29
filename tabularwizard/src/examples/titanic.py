@@ -2,8 +2,8 @@ from datetime import datetime
 import os
 import pickle
 import pandas as pd
-from src.classification.evaluate import Evaluate
-from src.classification.model.lightgbm_classifier import LightgbmClassifier
+from src.models.classification.evaluate import Evaluate
+from src.models.classification.implementations.lightgbm_classifier import LightgbmClassifier
 from src.data_preprocessing import DataPreprocessing
 from sklearn import preprocessing
 

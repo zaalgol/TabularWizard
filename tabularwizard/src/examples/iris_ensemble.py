@@ -3,15 +3,15 @@ from datetime import datetime
 import os
 import pickle
 import pandas as pd
-from src.classification.model.knn_classifier import KnnClassifier
-from src.classification.model.logistic_regression import LRegression
-from src.classification.evaluate import Evaluate
-from src.classification.model.mlpclassifier import MLPNetClassifier
-from src.classification.model.lightgbm_classifier import LightgbmClassifier
-from src.classification.model.random_forest_classifier import RandomForestClassifierCustom
-from src.classification.model.xgboost_classifier import XgboostClassifier
+from src.models.classification.implementations.knn_classifier import KnnClassifier
+from src.models.classification.implementations.logistic_regression import LRegression
+from src.models.classification.evaluate import Evaluate
+from src.models.classification.implementations.mlpclassifier import MLPNetClassifier
+from src.models.classification.implementations.lightgbm_classifier import LightgbmClassifier
+from src.models.classification.implementations.random_forest_classifier import RandomForestClassifierCustom
+from src.models.classification.implementations.xgboost_classifier import XgboostClassifier
 from src.data_preprocessing import DataPreprocessing
-from src.classification.model.ensemble import Ensemble
+from src.models.classification.implementations.ensemble import Ensemble
 from sklearn.ensemble import VotingClassifier
 
 

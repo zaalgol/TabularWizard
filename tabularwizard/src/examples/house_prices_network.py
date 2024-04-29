@@ -1,13 +1,13 @@
 import os
 import pickle
 import pandas as pd
-from src.classification.evaluate import Evaluate
-from src.regression.model.lightgbm_regerssor import LightGBMRegressor
+from src.models.classification.evaluate import Evaluate
+from src.models.regression.implementations.lightgbm_regerssor import LightGBMRegressor
 from src.data_preprocessing import DataPreprocessing
 import matplotlib.pyplot as plt
 from datetime import datetime
 
-from src.regression.model.mlrpregressor_pipeline import Mlrpegressor #, automatic_nn
+from src.models.regression.implementations.mlrpregressor_pipeline import Mlrpegressor #, automatic_nn
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 SAVED_MODEL_FOLDER = os.path.join('results', 'trained_models', 'regression', f"mlrpregressor_regression_{timestamp}")
 os.makedirs(SAVED_MODEL_FOLDER)
